@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MovieMarvel - Sign Up</title>
+    <title>MovieMarvel - Discover Cinema</title>
 
     <!-- Google Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -17,13 +17,17 @@
             --primary-red: #D72638;
             /* Secondary Colors */
             --secondary-yellow: #FFC857;
+            --secondary-gold: #FFD700;
             --secondary-gray: #ECECEC;
             /* Backgrounds */
-            --bg-main: #121212;
+            --bg-main: #0D1B2A;
             --bg-darker: #1C1C1C;
             --bg-card-dark: #2E2E2E;
             --bg-form-light: #F9F9F9;
             --bg-premium: #0D1B2A;
+            /* Sidebar */
+            --bg-sidebar: #0A1F44;
+            --sidebar-width: 240px;
             /* Text */
             --text-white: #FFFFFF;
             --text-light-gray: #B3B3B3;
@@ -35,6 +39,7 @@
             --error: #D90429;
         }
 
+        /* ── Reset & Base ── */
         body {
             font-family: 'Roboto', sans-serif;
             background-color: var(--bg-main);
@@ -57,7 +62,7 @@
             height: 100vh;
             z-index: -1;
             overflow: hidden;
-            background: radial-gradient(circle at 10% 20%, rgba(10, 31, 68, 0.5) 0%, transparent 40%),
+            background: radial-gradient(circle at 10% 20%, rgba(10, 31, 68, 0.6) 0%, transparent 40%),
                         radial-gradient(circle at 90% 80%, rgba(215, 38, 56, 0.15) 0%, transparent 40%);
         }
 
@@ -79,26 +84,176 @@
             margin-top: 0;
         }
 
-        /* Header */
+        /* ── Sidebar ── */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: calc(-1 * var(--sidebar-width));
+            width: var(--sidebar-width);
+            height: 100%;
+            background-color: var(--bg-sidebar);
+            color: var(--text-white);
+            padding: 1.5rem 1rem;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 215, 0, 0.15);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .side-menu.open {
+            left: 0;
+        }
+
+        .side-menu-logo {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--secondary-gold);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .side-menu-logo::before {
+            content: '';
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, var(--primary-red), var(--secondary-yellow));
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+
+        .auth-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .auth-actions button {
+            background-color: var(--secondary-yellow);
+            border: none;
+            padding: 0.6rem 1rem;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 6px;
+            color: var(--primary-navy);
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-actions button:hover {
+            background-color: var(--secondary-gold);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(255, 200, 87, 0.35);
+        }
+
+        .auth-actions .btn-login {
+            background-color: transparent;
+            border: 1px solid var(--secondary-yellow);
+            color: var(--secondary-yellow);
+        }
+
+        .auth-actions .btn-login:hover {
+            background-color: rgba(255, 200, 87, 0.1);
+            color: var(--secondary-gold);
+        }
+
+        .menu-links {
+            flex: 1;
+        }
+
+        .menu-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-links li {
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-links a {
+            color: var(--text-light-gray);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.65rem 0.75rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-weight: 400;
+        }
+
+        .menu-links a:hover {
+            color: var(--text-white);
+            background-color: rgba(255, 255, 255, 0.07);
+            text-decoration: none;
+        }
+
+        /* ── Header ── */
         header {
-            background-color: rgba(10, 31, 68, 0.85);
+            background-color: var(--primary-navy);
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            padding: 1rem 5%;
+            padding: 0.85rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
             position: sticky;
             top: 0;
             z-index: 100;
         }
 
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Hamburger toggle */
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary-gold);
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            box-shadow: none;
+            text-transform: none;
+            letter-spacing: normal;
+            font-weight: 400;
+            line-height: 1;
+        }
+
+        .menu-toggle:hover {
+            background-color: rgba(255, 215, 0, 0.12);
+            color: #fff;
+            transform: none;
+            box-shadow: none;
+        }
+
         header h1 {
-            font-size: 2rem;
+            font-size: 1.75rem;
             margin: 0;
-            color: var(--text-white);
+            color: var(--secondary-gold);
             text-transform: uppercase;
             font-weight: 700;
             letter-spacing: 1px;
@@ -106,17 +261,19 @@
             align-items: center;
             gap: 10px;
         }
-        
+
         header h1::before {
             content: '';
             display: inline-block;
-            width: 30px;
-            height: 30px;
+            width: 26px;
+            height: 26px;
             background: linear-gradient(135deg, var(--primary-red), var(--secondary-yellow));
-            border-radius: 8px;
-            box-shadow: 0 0 15px rgba(215, 38, 56, 0.6);
+            border-radius: 7px;
+            box-shadow: 0 0 12px rgba(215, 38, 56, 0.6);
+            flex-shrink: 0;
         }
 
+        /* ── Generic Buttons ── */
         button {
             background-color: var(--secondary-yellow);
             color: var(--primary-navy);
@@ -136,14 +293,14 @@
         button:hover {
             transform: translateY(-3px);
             box-shadow: 0 6px 15px rgba(255, 200, 87, 0.4);
-            background-color: #ffd27a;
+            background-color: var(--secondary-gold);
         }
 
         button:active {
             transform: translateY(1px);
         }
 
-        /* Main Container */
+        /* ── Main Container ── */
         main {
             flex: 1;
             display: flex;
@@ -175,13 +332,32 @@
             font-size: 1.2rem;
         }
 
-        /* Automatically hide background elements if any panel is shown (modern CSS) */
-        main:has(.panel:not(.hidden)) .hero-placeholder,
-        main:has(.panel:not(.hidden)) .movie-section {
-            display: none;
+        /* Panel backdrop */
+        .panel-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
         }
 
-        /* Movie Gallery Styles */
+        .panel-backdrop.visible {
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+        }
+
+        /* Prevent body scroll when a panel is open */
+        body.panel-open {
+            overflow: hidden;
+        }
+
+        /* ── Movie Gallery ── */
         .movie-section {
             width: 100%;
             max-width: 1200px;
@@ -212,7 +388,7 @@
         .movie-card:hover {
             transform: translateY(-5px);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
-            border-color: rgba(255, 200, 87, 0.4); /* Secondary yellow accent */
+            border-color: rgba(255, 215, 0, 0.35);
         }
 
         .movie-poster {
@@ -220,7 +396,7 @@
             aspect-ratio: 2/3;
             object-fit: cover;
             border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-            background-color: var(--bg-card-dark); /* Fallback */
+            background-color: var(--bg-card-dark);
         }
 
         .movie-info {
@@ -238,7 +414,7 @@
             text-overflow: ellipsis;
         }
 
-        /* Pagination Styles */
+        /* ── Pagination ── */
         .pagination {
             display: flex;
             justify-content: center;
@@ -285,20 +461,30 @@
             display: none !important;
         }
 
-        /* Generic Panel Styling */
+        /* ── Generic Panel (fixed modal) ── */
         .panel {
             background-color: var(--bg-form-light);
             color: var(--primary-navy);
             padding: 2.5rem;
-            width: 100%;
+            width: 90%;
             max-width: 420px;
+            max-height: 90vh;
+            overflow-y: auto;
             border-radius: 16px;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6);
-            margin: 1rem auto;
-            animation: slideUp 0.5s cubic-bezier(0.16, 1, 0.3, 1);
-            position: relative;
-            overflow: hidden;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
+            /* Fixed, centered in viewport */
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%) scale(1);
+            z-index: 300;
             box-sizing: border-box;
+            /* Entrance animation */
+            animation: panelIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+
+        .panel.hidden {
+            display: none !important;
         }
 
         /* Decorative top border for panels */
@@ -323,7 +509,7 @@
             display: none !important;
         }
 
-        /* Form Inputs */
+        /* ── Form Inputs ── */
         .form-group {
             margin-bottom: 1.5rem;
         }
@@ -363,25 +549,32 @@
             color: #a0aec0;
         }
 
+        /* Shared checkbox row styles */
+        .ack-container,
         .checkbox-container {
             display: flex;
-            align-items: center;
-            margin-bottom: 1.5rem;
-            gap: 0.5rem;
+            align-items: flex-start;
+            gap: 0.6rem;
+            margin-bottom: 1.25rem;
         }
 
+        .ack-container input[type="checkbox"],
         .checkbox-container input[type="checkbox"] {
-            width: 1.25rem;
-            height: 1.25rem;
-            accent-color: var(--primary-red);
+            margin-top: 2px;
+            width: 1.1rem;
+            height: 1.1rem;
+            flex-shrink: 0;
             cursor: pointer;
+            accent-color: var(--primary-red);
         }
 
+        .ack-text,
         .checkbox-container label {
             margin: 0;
             cursor: pointer;
             color: #4a5568;
             font-size: 0.95rem;
+            line-height: 1.4;
         }
 
         .submit-btn {
@@ -400,7 +593,7 @@
             box-shadow: 0 6px 15px rgba(10, 31, 68, 0.3);
         }
 
-        /* Links */
+        /* ── Links ── */
         a {
             color: var(--accent-blue);
             text-decoration: none;
@@ -421,18 +614,18 @@
             color: #666;
         }
 
-        /* Feedbacks */
+        /* ── Feedback colours ── */
         .success { color: var(--success); }
         .warning { color: var(--warning); }
-        .error { color: var(--error); }
+        .error   { color: var(--error); }
 
-        /* Specific Panels */
+        /* ── Premium Panel ── */
         #premiumPage {
             background: linear-gradient(145deg, var(--bg-premium) 0%, #08121f 100%);
             color: var(--text-white);
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.8);
-            border: 1px solid rgba(255, 200, 87, 0.15);
-            max-width: 500px;
+            box-shadow: 0 25px 60px rgba(0, 0, 0, 0.9);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            max-width: 480px;
         }
 
         #premiumPage::before {
@@ -440,7 +633,7 @@
         }
 
         #premiumPage h2 {
-            color: var(--secondary-yellow);
+            color: var(--secondary-gold);
             text-align: center;
             font-size: 2.5rem;
             margin-bottom: 2rem;
@@ -468,16 +661,17 @@
 
         .premium-features li::before {
             content: '★';
-            color: var(--secondary-yellow);
+            color: var(--secondary-gold);
             font-size: 1.3rem;
             margin-right: 15px;
-            filter: drop-shadow(0 0 5px rgba(255, 200, 87, 0.5));
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
         }
 
+        /* ── Payment Panel ── */
         #paymentPage {
             background-color: var(--bg-card-dark);
             color: var(--text-white);
-            max-width: 400px;
+            max-width: 420px;
         }
 
         #paymentPage::before {
@@ -525,28 +719,12 @@
             color: white;
             border: none;
         }
-        
+
         .payment-btn.paypal:hover {
             background-color: #005a9c;
         }
 
-        /* Animations */
-        @keyframes fadeIn {
-            from { opacity: 0; }
-            to { opacity: 1; }
-        }
-
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.98);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-        
+        /* ── Close button ── */
         .close-btn {
             position: absolute;
             top: 15px;
@@ -587,7 +765,36 @@
             background-color: rgba(255, 255, 255, 0.1);
             color: var(--text-white);
         }
-        
+
+        /* ── Animations ── */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to   { opacity: 1; }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.98);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        @keyframes panelIn {
+            from {
+                opacity: 0;
+                transform: translate(-50%, -48%) scale(0.97);
+            }
+            to {
+                opacity: 1;
+                transform: translate(-50%, -50%) scale(1);
+            }
+        }
+
+        /* ── Responsive ── */
         @media (max-width: 600px) {
             .panel {
                 padding: 2rem 1.5rem;
@@ -600,9 +807,33 @@
     <!-- Ambient Background Layer -->
     <div class="ambient-bg"></div>
 
+    <!-- Panel modal backdrop -->
+    <div class="panel-backdrop" id="panelBackdrop"></div>
+
+    <!-- Sidebar Menu -->
+    <aside class="side-menu" id="sideMenu">
+        <div class="side-menu-logo">MovieMarvel</div>
+        <div class="auth-actions">
+            <button class="btn-login" type="button">Login</button>
+            <button class="btn-signup" type="button">Sign Up</button>
+        </div>
+        <nav class="menu-links">
+            <ul>
+                <li><a href="/browse">Browse Movies</a></li>
+                <li><a href="/ratings">Ratings</a></li>
+                <li><a href="/reviews">Reviews</a></li>
+            </ul>
+        </nav>
+    </aside>
+
     <!-- Navigation Bar -->
-    <header>
-        <h1 id="logoBtn" style="cursor: pointer;" title="Back to Home"><a href="/" style="color: inherit; text-decoration: none;">MovieMarvel</a></h1>
+    <header id="siteHeader">
+        <div class="nav-left">
+            <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
+            <h1 id="logoBtn" style="cursor: pointer;" title="Back to Home">
+                <a href="/" style="color: inherit; text-decoration: none;">MovieMarvel</a>
+            </h1>
+        </div>
         <button id="signupBtn">Sign Up</button>
     </header>
 
@@ -618,7 +849,7 @@
             <div id="movieGrid" class="movie-grid">
                 <!-- Movies populated via JS will go here -->
             </div>
-            
+
             <div class="pagination">
                 <button id="prevPageBtn" class="circle-btn hidden-page"></button>
                 <div id="currentPageBtn" class="circle-btn active-page">1</div>
@@ -633,7 +864,7 @@
                 <h2>Create Account</h2>
                 <p class="panel-subtitle">Join MovieMarvel and start your journey.</p>
             </div>
-            
+
             <form>
                 <div class="form-group">
                     <label for="email">Email</label>
@@ -645,6 +876,17 @@
                     <input type="password" id="password" placeholder="Enter your password" required>
                 </div>
 
+                <!-- Terms acknowledgement -->
+                <div class="ack-container">
+                    <input type="checkbox" id="acknowledge">
+                    <label for="acknowledge" class="ack-text">
+                        By creating an account you agree to MovieMarvel's
+                        <a href="#" style="color: var(--accent-blue);">terms of service</a> and
+                        <a href="#" style="color: var(--accent-blue);">privacy policy</a>.
+                    </label>
+                </div>
+
+                <!-- Premium subscribe -->
                 <div class="checkbox-container">
                     <input type="checkbox" id="subscribe">
                     <label for="subscribe">Subscribe to MovieMarvel premium</label>
@@ -665,7 +907,7 @@
                 <h2>Choose Payment Method</h2>
                 <p class="panel-subtitle" style="color: var(--text-light-gray);">Securely link your payment options below.</p>
             </div>
-            
+
             <div class="payment-options">
                 <button class="payment-btn paypal">Link PayPal</button>
                 <button class="payment-btn">Pay with Credit Card</button>
@@ -677,7 +919,7 @@
             <button class="close-btn cancel-btn" aria-label="Close" type="button">&times;</button>
             <h2>MovieMarvel Premium Features</h2>
             <p class="panel-subtitle" style="color: rgba(255, 255, 255, 0.7); margin-top:-1.5rem;">Take your experience to the next level</p>
-            
+
             <ul class="premium-features">
                 <li>Exclusive Content Access</li>
                 <li>Advanced Recommendations</li>
