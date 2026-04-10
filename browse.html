@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Browse Movies</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #0D1B2A;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top Nav Bar */
+    .page-nav {
+      background-color: #0A1F44;
+      color: #FFD700;
+      padding: 1rem 0.5rem;
+      display: flex;
+      justify-content: space-between; 
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .page-nav.shifted {
+        margin-left: 240px;
+        transition: margin-left 0.3s ease;
+    }
+
+    .page-nav h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #FFD700;
+      cursor: pointer;
+    }
+
+    .side-menu {
+      display: none;
+  position: fixed;
+  top: 0;
+  left: -240px;       
+  width: 240px;
+  height: 100%;
+  background-color: #0D1B2A;
+  color: #fff;
+  padding: 1rem;
+  transition: left 0.3s ease;
+  z-index: 1000;
+  
+}
+
+.side-menu.open {
+  left: 0;            
+
+}
+
+    .auth-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .auth-actions button {
+      background-color: #FFC857;
+      border: none;
+      padding: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      color: #0A1F44;
+    }
+
+    .menu-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .menu-links li {
+      margin-bottom: 1rem;
+    }
+
+    .menu-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .menu-links a:hover {
+      text-decoration: underline;
+    }
+
+    .main-header {
+  text-align: center;
+  margin: 2rem 0;
+  color: #FFFFFF;
+}
+
+#searchBar {
+  display: block;
+  margin: 1rem auto;
+  padding: 0.5rem;
+  width: 60%;
+  max-width: 400px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+    .non-signup-card {
+    display: none;
+  background: #1B263B;
+  max-width: 500px;
+  margin: 2rem auto;
+  padding: 1.5rem;
+  border-radius: 8px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+}
+
+.non-signup-card .card-header {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 0;
+  margin-bottom: 1rem;
+}
+
+.non-signup-card h2 {
+  color: #FFD700;
+  margin: 0;
+  padding: 0;
+  font-weight: bold;
+  line-height: 1;
+  display: inline-block;
+}
+
+.non-signup-card .return-btn {
+  background: none;
+  border: none;
+  color: #FFD700;
+  padding: 0.3rem 0.8rem;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.non-signup-card .options button {
+  display: block;
+  width: 100%;
+  margin: 0.5rem 0;
+  padding: 0.7rem;
+  border: none;
+  border-radius: 4px;
+  font-weight: bold;
+  cursor: pointer;
+  background: #FFC857;
+  color: #0A1F44;
+}
+
+.modal {
+  display: none;              
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.6); 
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+}
+
+.modal-content {
+  background: #1B263B;
+  color: #fff;
+  padding: 2rem;
+  border-radius: 8px;
+  text-align: center;
+  max-width: 400px;
+}
+
+
+.details-card {
+  display: none;              
+  background-color: #F9F9F9;
+      color: #0A1F44;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: 2rem auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      overflow: hidden;
+      padding: 0;
+      padding-bottom: 3rem;
+}
+
+.details-nav {
+   background-color: #FFD700;
+      color: #0A1F44;
+     display: flex;              
+  align-items: center;        
+  justify-content: flex-start;
+  gap: 0.5rem;                
+  width: 100%;
+  box-sizing: border-box;
+  padding: 0.8rem 1rem;
+   
+
+}
+
+.details-nav h1 {
+  margin: 0;
+      font-size: 1.2rem;
+      font-family: 'Oswald', sans-serif;
+      font-weight: bold;
+}
+
+.return-btn {
+background: none;
+  border: none;               
+  color: #0A1F44;
+  font-size: 1rem;
+  cursor: pointer;
+  font-weight: bold;
+  margin: 0;                  
+  padding: 0;                 
+  display: inline;   
+
+}
+
+.details-body img {
+  max-width: 200px;
+  border-radius: 8px;
+  margin: 1rem auto;
+  display: block;
+}
+
+.details-body {
+  max-height: 400px;          
+  overflow-y: auto;           
+  padding-right: 2rem;     
+}
+
+.details-body h2 {
+  margin-left: 1rem;     
+}
+
+.details-body p {
+  margin-left: 1rem;    
+}
+
+.actions {
+  display: flex;
+  flex-direction: column;  
+  gap: 0.5rem;             
+  margin-top: 1rem;
+}
+
+.actions button {
+   padding: 0.75rem 1.5rem;
+      margin-top: 1.5rem;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 25px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      transition: background-color 0.3s ease;
+  background: #FFC857;
+  color: #0A1F44;
+}
+
+.stars {
+  display: inline-flex;
+  gap: 0.3rem;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #ccc;              
+}
+
+.stars span.selected {
+  color: #FFD700;           
+}
+
+.submit-rating {
+  margin-top: 0.5rem;
+  background-color: #FFD700;
+  border: none;
+  padding: 0.5rem 1rem;
+  font-weight: bold;
+  cursor: pointer;
+  color: #0A1F44;
+}
+
+ .rating-section {
+  margin-top: 1rem;
+  padding: 1rem;
+  border-radius: 6px;
+  text-align: center;
+   
+
+}
+
+  </style>
+</head>
+<body>
+    <header>
+         <!-- Nav Bar -->
+  <nav class="page-nav">
+        <div class="nav-left">
+  <button class="menu-toggle" aria-label="Open menu">☰</button>
+  <h1 class="logo">MovieMarvel</h1>
+  </div>
+    </header>
+
+<!-- Sidebar menu -->
+<aside class="side-menu" id="sideMenu">
+  <div class="user-info">
+    <img src="avatar.png" alt="User Avatar">
+    <h4>Username</h4>
+    <p>Account Type</p>
+    <button class="logoutBtn">Logout</button>
+  </div>
+
+  <nav class="menu-links">
+  <ul>
+    <li><a href="browse.html">Browse Movies</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+    <li><a href="recommendations.html">Recommendations</a></li>
+    <li><a href="watchlist.html">Watchlist</a></li>
+  </ul>
+</nav>
+</aside>
+
+  <!-- Page content -->
+  <main>
+
+   <div class="main-header">
+  <h1>Browse Movies</h1>
+  <input type="text" placeholder="Search here..." id="searchBar">
+</div>
+
+  <!-- Movie Grid -->
+  <div class="movie-grid" id="movieGrid"></div>
+
+  <!-- Movie Details Card -->
+<div class="details-card" id="detailsCard">
+  <nav class="details-nav">
+    <button class="return-btn" onclick="hideDetails()">← </button>
+    <h1>Movie Details</h1>
+  </nav>
+
+  <div class="details-body">
+    <h2 id="detailsTitle">Movie Title</h2>
+    <img id="detailsPoster" src="" alt="Movie Poster">
+    <p id="detailsDesc">Movie description goes here...</p>
+   <div class="actions">
+      <button>Rate</button>
+      <button onclick="window.location.href='review.html?title=Inception'">Review</button>
+      <button onclick="window.location.href='recommend.html?movieId=123'">Recommend</button>
+    </div>
+
+    <!-- Hidden rating section -->
+<div class="rating-section" id="ratingSection" style="display: none;">
+  <p>Rate this movie:</p>
+  <div class="stars">
+    <span data-value="1">★</span>
+    <span data-value="2">★</span>
+    <span data-value="3">★</span>
+    <span data-value="4">★</span>
+    <span data-value="5">★</span>
+  </div>
+  <button class="submit-rating">Submit Rating</button>
+  <p><a href="ratings.html">View all my ratings</a></p>
+</div>
+  </div>
+</div>
+
+  <!-- Modal -->
+  <div class="modal" id="loginModal">
+    <div class="modal-content">
+      <h3>Not Logged In</h3>
+      <p>You are not logged in. Please sign up to recommend this movie.</p>
+      <button class="cancel-btn" id="cancelBtn">Cancel</button>
+      <button class="login-btn" onclick="window.location.href='login.html'">Login</button>
+      <button class="signup-btn" onclick="window.location.href='signup.html'">Sign Up</button>
+    </div>
+  </div>
+
+  <!-- Non-Sign Up Card -->
+<div class="non-signup-card">
+  <div class="card-header">
+    <button class="return-btn" onclick="window.location.href='browse.html'">←</button>
+    <h2>Non-Sign Up Options</h2>
+  </div>
+  <div class="options">
+    <button onclick="window.location.href='rate.html'">Rate Movie</button>
+    <button onclick="window.location.href='review.html'">Review Movie</button>
+  </div>
+</div>
+
+
+<script src="script.js"></script>
+<!--search bar to filter movies live as you type
+fetch and display movie cards
+simulate not logged in for recommendBtn
+show details view, hide details view when modal opens
+cancelBtn show non signup card
+login show log in modal
+show and hide modal-->
+<!--rating section: show rating section when rate movie is clicked and send rating to backend, highlight up to clicked star-->
+  </main>
+</body>
+</html>
