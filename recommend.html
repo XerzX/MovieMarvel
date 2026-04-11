@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Recommend a Movie</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+
+  <style>
+    body {
+      background-color: #0D1B2A;
+      color: #FFD700;
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top Nav Bar */
+    .page-nav {
+      background-color: #0A1F44;
+      color: #FFD700;
+      padding: 1rem 0.5rem;
+      display: flex;
+      justify-content: space-between; 
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .page-nav.shifted {
+        margin-left: 240px;
+        transition: margin-left 0.3s ease;
+    }
+
+    .page-nav h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #FFD700;
+      cursor: pointer;
+    }
+
+    .side-menu {
+        display: none;
+  position: fixed;
+  top: 0;
+  left: -240px;       
+  width: 240px;
+  height: 100%;
+  background-color: #0D1B2A;
+  color: #fff;
+  padding: 1rem;
+  transition: left 0.3s ease;
+  z-index: 1000;
+  
+}
+
+.side-menu.open {
+  left: 0;            
+}
+
+    .auth-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .auth-actions button {
+      background-color: #FFC857;
+      border: none;
+      padding: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      color: #0A1F44;
+    }
+
+    .menu-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .menu-links li {
+      margin-bottom: 1rem;
+    }
+
+    .menu-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .menu-links a:hover {
+      text-decoration: underline;
+    }
+
+    .recommend-container {
+      max-width: 600px;
+      margin: 2rem auto;
+      background: #1B263B;
+      padding: 2rem;
+      border-radius: 8px;
+    }
+
+    .movie-title {
+      font-weight: bold;
+      margin: 1rem 0;
+      color: #FFD700;
+    }
+
+    /* Internal form */
+    form label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+    }
+
+    form input, form textarea {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.3rem;
+      border: 1px solid #FFD700;
+      border-radius: 4px;
+      background: #FFFFFF;
+      color: #0D1B2A;
+    }
+
+    form textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .submit-btn {
+      margin-top: 1rem;
+      background-color: #FFD700;
+      border: none;
+      padding: 0.6rem 1.2rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 50px; 
+      color: #111;
+    }
+
+    .share-buttons {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 1.5rem;
+    }
+
+    .share-buttons a {
+      display: inline-block;
+      text-align: center;
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-weight: bold;
+      text-decoration: none;
+      font-size: 0.9rem;
+      min-width: 120px;
+    }
+
+    .whatsapp {
+      background-color: #25D366;
+      color: #111;
+    }
+
+    .instagram {
+      background: linear-gradient(45deg, #feda75, #fa7e1e, #d62976, #962fbf, #4f5bd5);
+      color: #fff;
+    }
+
+    .back-link {
+      display: block;
+      margin-top: 1rem;
+      text-align: center;
+      color: #00aaff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .back-link:hover {
+  text-decoration: underline;
+}
+
+  </style>
+</head>
+<body>
+    <header>
+         <!-- Nav Bar -->
+  <nav class="page-nav">
+        <div class="nav-left">
+  <button class="menu-toggle" aria-label="Open menu">☰</button>
+  <h1 class="logo">MovieMarvel</h1>
+  </div>
+    </header>
+
+<!-- Sidebar menu -->
+<aside class="side-menu" id="sideMenu">
+  <div class="user-info">
+    <img src="avatar.png" alt="User Avatar">
+    <h4>Username</h4>
+    <p>Account Type</p>
+    <button class="logoutBtn">Logout</button>
+  </div>
+
+  <nav class="menu-links">
+  <ul>
+    <li><a href="browse.html">Browse Movies</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+    <li><a href="recommendations.html">Recommendations</a></li>
+    <li><a href="watchlist.html">Watchlist</a></li>
+  </ul>
+</nav>
+</aside>
+
+  <main>
+    <div class="recommend-container">
+      <h1>Recommend This Movie</h1>
+      <div class="movie-title" id="movieTitle">Loading movie...</div>
+
+      <!-- Internal recommendation form -->
+      <form id="recommendForm">
+        <label for="recipient">Recommend to another user:</label>
+        <input type="text" id="recipient" placeholder="Enter username or email">
+
+        <label for="message">Message (optional):</label>
+        <textarea id="message"></textarea>
+
+        <button type="submit" class="submit-btn">Send Recommendation</button>
+      </form>
+
+      <!-- External share buttons -->
+      <div class="share-buttons">
+        <a id="whatsappShare" class="whatsapp" target="_blank">WhatsApp</a>
+        <a id="instagramShare" class="instagram" target="_blank">Instagram</a>
+      </div>
+
+      <a href="browse.html" class="back-link">← Back to Movies</a>
+    </div>
+  </main>
+<!--get movie title from url
+show the movie title in the page
+whatsapp share link
+instagram share link(Instagram doesn’t allow direct text sharing via url
+  best to share a link to the site/app so users can post it in their story or DM)
+  internal recommendation form
+  send to backen
+-->
+<script src="script.js"></script>
+</body>
+</html>
