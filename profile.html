@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #0D1B2A;
+      color: #FFD700;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top Nav Bar */
+    .page-nav {
+      background-color: #0A1F44;
+      color: #FFD700;
+      padding: 1rem 0.5rem;
+      display: flex;
+      justify-content: flex-start; 
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .page-nav.shifted {
+        margin-left: 240px;
+        transition: margin-left 0.3s ease;
+    }
+
+    .page-nav h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #FFD700;
+      cursor: pointer;
+    }
+
+    /* Sidebar Menu */
+    .side-menu {
+      display:none;
+      position: fixed;
+      top: 0;
+      left: -240px; 
+      width: 240px;
+      height: 100%;
+      background-color: #0D1B2A;
+      color: #fff;
+      padding: 1rem;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    .side-menu.open {
+      left: 0; 
+    }
+
+    .auth-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .auth-actions button {
+      background-color: #FFC857;
+      border: none;
+      padding: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      color: #0A1F44;
+    }
+
+    .menu-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .menu-links li {
+      margin-bottom: 1rem;
+    }
+
+    .menu-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .menu-links a:hover {
+      text-decoration: underline;
+    }
+
+    .profile-container {
+  max-width: 600px;
+  margin: 2rem auto;
+  background: #1B263B;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.5); /* soft shadow */
+  border: 1px solid #FFD700;              /* gold accent border */
+}
+
+.activity {
+  margin-top: 2rem;
+  background: #0D1B2A;
+  padding: 1rem;
+  border-radius: 8px;
+}
+
+.profile-title {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* keeps heading centered */
+  gap: 0.5rem;
+}
+
+.profile-logo {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;   /* keeps it circular */
+  cursor: pointer;      /* makes it feel clickable */
+  border: 2px solid #FFD700; /* gold accent border */
+  transition: transform 0.2s ease;
+}
+
+.profile-logo:hover {
+  transform: scale(1.05); /* subtle zoom on hover */
+}
+
+.status-badge {
+  display: inline-block;
+  padding: 0.3rem 0.8rem;
+  border-radius: 20px;
+  font-weight: bold;
+  font-size: 0.9rem;
+}
+
+.status-badge.free {
+  background-color: #FF4C4C; /* red for free */
+  color: #fff;
+}
+
+.status-badge.premium {
+  background-color: #FFD700; /* gold for premium */
+  color: #111;
+}
+
+.btn {
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 25px;
+  margin: 0.5rem;
+}
+
+.btn-warning {
+  background-color: #FFD700;
+  color: #111;
+}
+
+.btn-warning:hover {
+  background-color: #e6c200;
+}
+
+.btn-danger {
+  background-color: #FF4C4C;
+  color: #fff;
+}
+
+.btn-danger:hover {
+  background-color: #cc0000;
+}
+
+    #subscribeBtn {
+      background-color: #FFC857;
+      color: #0A1F44;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 25px;
+      transition: background-color 0.3s ease;
+    }
+
+    #subscribeBtn:hover {
+      background-color: #e6b94d;
+    }
+
+    .logout-btn {
+  background-color: #FF4C4C;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 50px;
+  color: #fff;
+  margin-top: 1rem;
+}
+
+.logout-btn:hover {
+  background-color: #cc0000;
+}
+
+.delete-btn {
+  background-color: #8B0000;
+  border: none;
+  padding: 0.6rem 1.2rem;
+  font-weight: bold;
+  cursor: pointer;
+  border-radius: 50px;
+  color: #fff;
+  margin-top: 1rem;
+}
+
+.delete-btn:hover {
+  background-color: #5a0000;
+}
+
+  </style>
+</head>
+<body>
+
+  <!-- Page nav bar -->
+  <nav class="page-nav">
+    <div class="nav-left">
+      <button class="menu-toggle" aria-label="Open menu">☰</button>
+      <h1 class="logo">MovieMarvel</h1>
+    </div>
+  </nav>
+
+  <!-- Side menu -->
+  <!-- Sidebar menu -->
+<aside class="side-menu" id="sideMenu">
+  <div class="user-info">
+    <img src="avatar.png" alt="User Avatar">
+    <h4>Username</h4>
+    <p>Account Type</p>
+    <button class="logoutBtn">Logout</button>
+  </div>
+
+  <nav class="menu-links">
+  <ul>
+    <li><a href="browse.html">Browse Movies</a></li>
+    <li><a href="profile.html">Profile</a></li>
+    <li><a href="reviews.html">Reviews</a></li>
+    <li><a href="recommendations.html">Recommendations</a></li>
+    <li><a href="watchlist.html">Watchlist</a></li>
+  </ul>
+</nav>
+</aside>
+
+  <!-- Main content -->
+  <main class="profile-container">
+     <h1 class="profile-title">
+  <img src="avatar.png" class="profile-logo" id="profileLogo">
+  User Profile
+</h1>
+
+<!-- Hidden file input -->
+<input type="file" id="profilePicInput" accept="image/*" style="display:none;">
+
+  <div class="profile-info">
+    <p><strong>Email:</strong> <span id="email">user@example.com</span></p>
+    <p><strong>Joined:</strong> <span id="joinedDate">January 2026</span></p>
+    <p><strong>Preferences:</strong> <span id="preferences">Sci‑Fi, Action</span></p>
+    <p><strong>Status:</strong>
+    <span id="accountStatus" class="status-badge free">Free</span>
+    </p>
+  </div>
+
+  <!-- Account Actions -->
+  <div class="account-actions">
+    <button class="btn btn-warning" onclick="window.location.href='premium.html'">
+  Switch to Premium
+</button>
+    <button id="logoutBtn" class="btn btn-danger">Logout</button>
+    <button id="deleteAccountBtn" class="btn btn-danger">Delete Account</button>
+  </div>
+
+  <!-- Activity Overview -->
+  <div class="activity">
+  <p><strong>Reviews Written:</strong> <a href="allreviews.html" id="reviewsCount">12</a></p>
+  <p><strong>Movies in Watchlist:</strong> <a href="watchlist.html" id="watchlistCount">8</a></p>
+  <p><strong>Recommendations Sent:</strong> <a href="recommendations.html" id="recommendationsCount">5</a></p>
+</div>
+</main>
+
+  <!-- js for user info: username, account type, email, joined date, preferences
+   logout
+   check if user premium or not
+   hide subscribe button if user is premium
+   is premium or not for the status
+   clear session
+   redirect to login page
+   delete account, redirect to signup page
+   profile pic input, preview new image, send file to backend for permanent update-->
+</body>
+</html>
