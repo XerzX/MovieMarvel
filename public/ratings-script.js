@@ -2,7 +2,9 @@ import { getApp } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-app.j
 import { getFirestore, collection, query, where, getDocs } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-firestore.js";
 import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.9.0/firebase-auth.js";
 
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await window.MovieMarvelEnvReady;
+
     const API_KEY = window.ENV && window.ENV.TMDB_API_KEY;
     const BASE_URL = window.ENV && window.ENV.TMDB_BASE_URL;
 
@@ -17,7 +19,7 @@ document.addEventListener('DOMContentLoaded', () => {
     const searchClear  = document.getElementById('searchClear');
     const searchCount  = document.getElementById('searchCount');
 
-    if (!API_KEY) { console.error('TMDB API Key missing.'); return; }
+    if (!API_KEY) { console.error('TMDB API Key missing. Add tmdbApiKey to Firestore config/public.'); return; }
 
     let app, db, auth;
     try {

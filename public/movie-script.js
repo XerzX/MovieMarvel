@@ -1,4 +1,6 @@
 document.addEventListener('DOMContentLoaded', async () => {
+    await window.MovieMarvelEnvReady;
+
     // -- Config --
     const TMDB_KEY  = window.ENV && window.ENV.TMDB_API_KEY;
     const TMDB_BASE = window.ENV && window.ENV.TMDB_BASE_URL;

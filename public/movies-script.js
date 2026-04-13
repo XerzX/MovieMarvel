@@ -1,4 +1,6 @@
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
+    await window.MovieMarvelEnvReady;
+
     const movieGrid = document.getElementById('movieGrid');
     const prevPageBtn = document.getElementById('prevPageBtn');
     const nextPageBtn = document.getElementById('nextPageBtn');
@@ -11,12 +13,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const BASE_URL = window.ENV && window.ENV.TMDB_BASE_URL;
 
     if (!API_KEY || API_KEY === "") {
-        console.error("TMDB API Key is missing. Please update public/config.js");
+        console.error("TMDB API Key is missing. Add tmdbApiKey to Firestore config/public.");
         if (movieGrid) {
             movieGrid.innerHTML = `
                 <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; background: rgba(217, 4, 41, 0.1); border-radius: 12px; border: 1px solid var(--error);">
                     <h3 style="color: var(--error);">Configuration Missing</h3>
-                    <p>Please enter your TMDB API Key in <code>public/config.js</code> to view movies.</p>
+                    <p>Add your TMDB API key to the <code>config/public</code> document in Firestore (field <code>tmdbApiKey</code>).</p>
                 </div>`;
         }
         return;
