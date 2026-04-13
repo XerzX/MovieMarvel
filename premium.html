@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MovieMarvel Premium Features</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #0D1B2A;
+      color: #FFD700;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top Nav Bar */
+    .page-nav {
+      background-color: #0A1F44;
+      color: #FFD700;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between; 
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .page-nav.shifted {
+        margin-left: 240px;
+        transition: margin-left 0.3s ease;
+    }
+
+    .page-nav h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #FFD700;
+      cursor: pointer;
+    }
+
+    /* Sidebar Menu */
+    .side-menu {
+      display:none;
+      position: fixed;
+      top: 0;
+      left: -240px; 
+      width: 240px;
+      height: 100%;
+      background-color: #0D1B2A;
+      color: #fff;
+      padding: 1rem;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    .side-menu.open {
+      left: 0; 
+    }
+
+    .auth-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .auth-actions button {
+      background-color: #FFC857;
+      border: none;
+      padding: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      color: #0A1F44;
+    }
+
+    .menu-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .menu-links li {
+      margin-bottom: 1rem;
+    }
+
+    .menu-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .menu-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Card container */
+    .card {
+      background-color: #F9F9F9;
+      color: #0A1F44;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: 2rem auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      overflow: hidden;
+      transition: margin-left 0.3s ease;
+    }
+
+    .card.shifted {
+      margin-left: 240px; 
+    }
+
+    /* Card nav bar */
+    .card-nav {
+      background-color: #FFD700;
+      color: #0A1F44;
+      display: flex;
+      align-items: center;
+      padding: 1rem;
+    }
+
+    .card-nav button {
+      background: none;
+      border: none;
+      font-size: 1.2rem;
+      margin-right: 0.5rem;
+      cursor: pointer;
+      color: #0A1F44;
+      font-weight: bold;
+    }
+
+    .card-nav h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    /* Card content */
+    .card-content {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .card-content ul {
+      list-style: none;
+      padding: 0;
+      margin: 0 0 2rem;
+    }
+
+    .card-content ul li {
+      margin: 0.75rem 0;
+      font-size: 1.1rem;
+    }
+
+    #subscribeBtn {
+      background-color: #FFC857;
+      color: #0A1F44;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 25px;
+      transition: background-color 0.3s ease;
+    }
+
+    #subscribeBtn:hover {
+      background-color: #e6b94d;
+    }
+  </style>
+</head>
+<body>
+  <!-- Page nav bar -->
+  <nav class="page-nav">
+    <div class="nav-left">
+      <button class="menu-toggle" aria-label="Open menu">☰</button>
+      <h1 class="logo">MovieMarvel</h1>
+    </div>
+  </nav>
+
+  <!-- Sidebar Menu -->
+  <aside class="side-menu">
+    <div class="auth-actions">
+      <button class="btn-login">Login</button>
+      <button class="btn-signup">Sign Up</button>
+    </div>
+    <nav class="menu-links">
+      <ul>
+        <li><a href="/browse">Browse Movies</a></li>
+        <li><a href="/ratings">Ratings</a></li>
+        <li><a href="/reviews">Reviews</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Premium card -->
+  <div class="card">
+    <div class="card-nav">
+      <button onclick="window.location.href='signup.html'">←</button>
+      <h2>Premium Features</h2>
+    </div>
+    <div class="card-content">
+      <ul>
+        <li>Exclusive Content Access</li>
+        <li>Advanced Recommendations</li>
+        <li>Enhanced Diary and Review Tools</li>
+        <li>Community and Social Features</li>
+        <li>Perks and Integrations</li>
+      </ul>
+      <button type="button" id="subscribeBtn">Subscribe</button>
+    </div>
+  </div>
+  </script>
+</body>
+</html>
+

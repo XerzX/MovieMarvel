@@ -1,0 +1,594 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0D1B2A">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/icons/icon-512.png">
+    <title>Your Watchlist — MovieMarvel</title>
+    <meta name="description"
+        content="View movies you have added to your personal watchlist on MovieMarvel.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap"
+        rel="stylesheet">
+
+    <style>
+        :root {
+            /* Primary Colors */
+            --primary-navy: #0A1F44;
+            --primary-red: #D72638;
+            /* Secondary Colors */
+            --secondary-yellow: #FFC857;
+            --secondary-gold: #FFD700;
+            --secondary-gray: #ECECEC;
+            /* Backgrounds */
+            --bg-main: #0D1B2A;
+            --bg-darker: #1C1C1C;
+            --bg-card-dark: #2E2E2E;
+            --bg-form-light: #F9F9F9;
+            --bg-premium: #0D1B2A;
+            /* Sidebar */
+            --bg-sidebar: #0A1F44;
+            --sidebar-width: 240px;
+            /* Text */
+            --text-white: #FFFFFF;
+            --text-light-gray: #B3B3B3;
+            /* Accents */
+            --accent-blue: #1DB9F0;
+            /* Feedback */
+            --success: #4CAF50;
+            --warning: #FFB704;
+            --error: #D90429;
+        }
+
+        /* ── Reset & Base ── */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-white);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+            position: relative;
+        }
+
+        /* Ambient Background Effects */
+        .ambient-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: radial-gradient(circle at 10% 20%, rgba(10, 31, 68, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(215, 38, 56, 0.15) 0%, transparent 40%);
+        }
+
+        h1,
+        h2,
+        h3 {
+            font-family: 'Oswald', sans-serif;
+            margin-top: 0;
+            color: var(--text-white);
+            letter-spacing: 0.5px;
+        }
+
+        p {
+            line-height: 1.6;
+            margin-top: 0;
+        }
+
+        /* ── Sidebar ── */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: calc(-1 * var(--sidebar-width));
+            width: var(--sidebar-width);
+            height: 100%;
+            background-color: var(--bg-sidebar);
+            color: var(--text-white);
+            padding: 1.5rem 1rem;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            box-sizing: border-box;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 215, 0, 0.15);
+            box-shadow: 4px 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .side-menu.open {
+            left: 0;
+        }
+
+        .side-menu-logo {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--secondary-gold);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .side-menu-logo::before {
+            content: '';
+            display: inline-block;
+            width: 22px;
+            height: 22px;
+            background: linear-gradient(135deg, var(--primary-red), var(--secondary-yellow));
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+
+        body:not(.auth-mode-anonymous) .anonymous-only { display: none !important; }
+        body:not(.auth-mode-authenticated) .authenticated-only { display: none !important; }
+
+        .auth-actions {
+            display: flex;
+            flex-direction: column;
+            gap: 0.6rem;
+            margin-bottom: 1.75rem;
+        }
+
+        .auth-actions button {
+            background-color: var(--secondary-yellow);
+            border: none;
+            padding: 0.6rem 1rem;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 6px;
+            color: var(--primary-navy);
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .auth-actions button:hover {
+            background-color: var(--secondary-gold);
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(255, 200, 87, 0.35);
+        }
+
+        .auth-actions .btn-login {
+            background-color: transparent;
+            border: 1px solid var(--secondary-yellow);
+            color: var(--secondary-yellow);
+        }
+
+        .auth-actions .btn-login:hover {
+            background-color: rgba(255, 200, 87, 0.1);
+            color: var(--secondary-gold);
+        }
+
+        .menu-links {
+            flex: 1;
+        }
+
+        .menu-links ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .menu-links li {
+            margin-bottom: 0.25rem;
+        }
+
+        .menu-links a {
+            color: var(--text-light-gray);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.65rem 0.75rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            font-weight: 400;
+        }
+
+        .menu-links a:hover,
+        .menu-links a.active {
+            color: var(--text-white);
+            background-color: rgba(255, 255, 255, 0.07);
+            text-decoration: none;
+        }
+
+        .menu-links a.active {
+            color: var(--secondary-gold);
+            background-color: rgba(255, 215, 0, 0.08);
+        }
+
+        /* ── Header ── */
+        header {
+            background-color: var(--primary-navy);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            padding: 0.85rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .nav-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        /* Hamburger toggle */
+        .menu-toggle {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            color: var(--secondary-gold);
+            cursor: pointer;
+            padding: 0.25rem 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            box-shadow: none;
+            text-transform: none;
+            letter-spacing: normal;
+            font-weight: 400;
+            line-height: 1;
+        }
+
+        .menu-toggle:hover {
+            background-color: rgba(255, 215, 0, 0.12);
+            color: #fff;
+            transform: none;
+            box-shadow: none;
+        }
+
+        header h1 {
+            font-size: 1.75rem;
+            margin: 0;
+            color: var(--secondary-gold);
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 1px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        header h1::before {
+            content: '';
+            display: inline-block;
+            width: 26px;
+            height: 26px;
+            background: linear-gradient(135deg, var(--primary-red), var(--secondary-yellow));
+            border-radius: 7px;
+            box-shadow: 0 0 12px rgba(215, 38, 56, 0.6);
+            flex-shrink: 0;
+        }
+
+        /* ── Generic Buttons ── */
+        button {
+            background-color: var(--secondary-yellow);
+            color: var(--primary-navy);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 30px;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            box-shadow: 0 4px 10px rgba(255, 200, 87, 0.25);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 15px rgba(255, 200, 87, 0.4);
+            background-color: var(--secondary-gold);
+        }
+
+        button:active {
+            transform: translateY(1px);
+        }
+
+        /* ── Main Container ── */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        /* Panel backdrop */
+        .panel-backdrop {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            -webkit-backdrop-filter: blur(4px);
+            z-index: 200;
+            opacity: 0;
+            pointer-events: none;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .panel-backdrop.visible {
+            opacity: 1;
+            pointer-events: auto;
+            visibility: visible;
+        }
+
+        body.panel-open {
+            overflow: hidden;
+        }
+
+        /* ── Browse Hero (Watchlist Title) ── */
+        .browse-hero {
+            width: 100%;
+            max-width: 760px;
+            text-align: center;
+            padding: 2.5rem 1rem 2rem;
+            animation: fadeIn 0.7s ease-out;
+        }
+
+        .browse-hero h2 {
+            font-size: 2.6rem;
+            color: var(--text-white);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .browse-hero h2 span {
+            color: var(--secondary-gold);
+        }
+
+        .browse-hero p {
+            color: var(--text-light-gray);
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ── Empty State ── */
+        .browse-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 3rem 1rem;
+            color: var(--text-light-gray);
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .browse-empty-state .empty-icon {
+            font-size: 4rem;
+            opacity: 0.35;
+            line-height: 1;
+        }
+
+        .browse-empty-state h3 {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 0.25rem;
+        }
+
+        .browse-empty-state p {
+            font-size: 0.95rem;
+            color: var(--text-light-gray);
+            opacity: 0.7;
+            max-width: 360px;
+        }
+
+        /* ── Movie Gallery ── */
+        .movie-section {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .movie-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .movie-card {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            display: flex;
+            flex-direction: column;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .movie-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6);
+            border-color: rgba(255, 215, 0, 0.35);
+        }
+
+        .movie-poster {
+            width: 100%;
+            aspect-ratio: 2/3;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            background-color: var(--bg-card-dark);
+        }
+
+        .movie-info {
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .movie-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.1rem;
+            color: var(--text-white);
+            margin: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .remove-btn {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.7);
+            color: var(--text-white);
+            border: 1px solid rgba(255, 215, 0, 0.5);
+            border-radius: 50%;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            padding: 0;
+        }
+
+        .remove-btn:hover {
+            background: var(--primary-red);
+            border-color: var(--primary-red);
+            transform: scale(1.1);
+        }
+
+        /* ── Animations ── */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes spin {
+            100% { transform: rotate(360deg); }
+        }
+
+        /* ── Responsive ── */
+        @media (max-width: 600px) {
+            .browse-hero h2 {
+                font-size: 1.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <!-- Ambient Background Layer -->
+    <div class="ambient-bg"></div>
+
+    <!-- Sidebar Menu -->
+    <aside class="side-menu" id="sideMenu">
+        <div class="side-menu-logo">MovieMarvel</div>
+        <div class="auth-actions anonymous-only">
+            <button class="btn-login" type="button" onclick="location.href='index.html'">Login</button>
+            <button class="btn-signup" type="button" onclick="location.href='index.html'">Sign Up</button>
+        </div>
+        <div class="auth-actions authenticated-only">
+            <button class="btn-login logout-btn" id="sidebarLogout" type="button" style="border: 1px solid rgba(255,255,255,0.2); background: transparent; width: 100%;">Logout</button>
+        </div>
+        <nav class="menu-links">
+            <ul>
+                <li><a href="browse.html">Browse Movies</a></li>
+                <li class="authenticated-only"><a href="recommendations.html">Recommendations</a></li>
+                <li class="authenticated-only"><a href="watchlist.html" class="active">Watchlist</a></li>
+                <li><a href="ratings.html">Ratings</a></li>
+                <li><a href="reviews.html">Reviews</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Navigation Bar -->
+    <header id="siteHeader">
+        <div class="nav-left">
+            <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
+            <h1>
+                <a href="index.html"
+                   onclick="sessionStorage.removeItem('mm_index_page');sessionStorage.removeItem('mm_index_scroll');"
+                   style="color: inherit; text-decoration: none;">MovieMarvel</a>
+            </h1>
+        </div>
+        <div style="display: flex; align-items: center; gap: 1rem;">
+            <span class="nav-user-greeting authenticated-only" style="color: var(--text-light-gray); font-weight: 500;"></span>
+            <button class="logout-btn authenticated-only" id="headerLogout" style="border: 1px solid rgba(255,255,255,0.2); background: transparent; padding: 0.8rem 1.5rem; border-radius: 25px; color: var(--text-white); font-weight: 700; cursor: pointer; display: none;">Logout</button>
+        </div>
+    </header>
+
+    <main id="mainContent">
+
+        <section class="browse-hero">
+            <h2>Your <span>Watchlist</span></h2>
+            <p>Movies you have saved to watch later.</p>
+            <div id="authWarning" class="anonymous-only warning" style="margin-top: 1rem; font-weight: bold; background: rgba(0,0,0,0.5); padding: 1rem; border-radius: 8px;">
+                You must be logged in to view your Watchlist. 
+                <a href="index.html" style="color: var(--secondary-gold); text-decoration: underline;">Go Home</a>
+            </div>
+        </section>
+
+        <!-- Movie Gallery -->
+        <section class="movie-section authenticated-only" id="movieSection">
+            <!-- Loading State -->
+            <div id="loadingState" style="text-align: center; padding: 4rem; color: var(--text-light-gray);">
+                <div class="empty-icon" style="animation: spin 1.5s linear infinite; display: inline-block; font-size: 3rem;">🎬</div>
+                <p style="margin-top: 1rem;">Fetching your watchlist...</p>
+            </div>
+
+            <div class="movie-grid hidden" id="movieGallery"></div>
+
+            <!-- Empty State -->
+            <div id="emptyState" class="browse-empty-state hidden">
+                <div class="empty-icon">🍿</div>
+                <h3>Your watchlist is empty</h3>
+                <p>Browse movies and add them to your watchlist to see them here.</p>
+                <button onclick="location.href='browse.html'" style="margin-top: 1rem;">Browse Movies</button>
+            </div>
+        </section>
+    </main>
+
+    <script type="module" src="auth.js"></script>
+    <script defer src="signup-script.js?v=2"></script>
+    <script type="module" src="watchlist-script.js"></script>
+</body>
+
+</html>

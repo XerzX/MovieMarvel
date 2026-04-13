@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Recommendations</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #0D1B2A;
+      color: #FFD700;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top Nav Bar */
+    .page-nav {
+      background-color: #0A1F44;
+      color: #FFD700;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between; 
+      align-items: center;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #FFD700;
+      cursor: pointer;
+    }
+
+    /* Sidebar Menu */
+    aside.side-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 100%;
+      background-color: #0D1B2A;
+      color: #fff;
+      padding: 1rem;
+      z-index: 1000;
+    }
+    aside.side-menu.open {
+      display: block;
+    }
+
+    .user-info {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+    .user-info img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+    }
+
+    .auth-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .btn {
+      padding: 0.7rem 1.4rem;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+    .btn.logout { background-color: #FF4C4C; color: #fff; }
+    .btn.logout:hover { background-color: #cc0000; }
+    .btn.delete { background-color: #8B0000; color: #fff; }
+    .btn.delete:hover { background-color: #5a0000; }
+
+    .menu-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .menu-links li {
+      margin-bottom: 1rem;
+    }
+    .menu-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+    .menu-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Main container */
+    main {
+      max-width: 1000px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #1B263B;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+    }
+
+    .recommendations-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 2rem;
+    }
+    .recommendations-header img {
+      width: 40px;
+      height: 40px;
+    }
+
+    .badge {
+      font-size: 0.8rem;
+      font-weight: bold;
+      padding: 0.3rem 0.6rem;
+      border-radius: 12px;
+    }
+    .badge.free { background-color: #555; color: #FFD700; }
+    .badge.premium { background-color: #FFD700; color: #0A1F44; }
+
+    section {
+      margin-bottom: 2rem;
+    }
+    section h2 {
+      font-family: 'Oswald', sans-serif;
+      margin-bottom: 1rem;
+      text-align: center;
+    }
+
+    .movie-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 1rem;
+    }
+    .movie-card {
+      background: #0A1F44;
+      border-radius: 8px;
+      padding: 1rem;
+      text-align: center;
+      transition: transform 0.2s ease, box-shadow 0.2s ease;
+    }
+    .movie-card:hover {
+      transform: scale(1.05);
+      box-shadow: 0 0 10px rgba(255,215,0,0.7);
+    }
+    .movie-card img {
+      width: 100%;
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+    }
+    .movie-card h3 {
+      font-size: 1rem;
+      margin: 0.5rem 0;
+    }
+    .movie-card p {
+      font-size: 0.85rem;
+      margin: 0;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page nav bar -->
+  <nav class="page-nav">
+    <div class="nav-left">
+      <button class="menu-toggle" aria-label="Open menu">☰</button>
+      <h1 class="logo">MovieMarvel</h1>
+    </div>
+  </nav>
+
+  <!-- Aside side menu -->
+  <aside class="side-menu" id="sideMenu">
+    <div class="user-info">
+      <img src="avatar.png" id="profileLogo">
+      <h4 id="username">Username</h4>
+      <p>Account Type: <span class="badge free" id="accountBadge">Free</span></p>
+    </div>
+
+    <div class="menu-links">
+      <ul>
+        <li><a href="browse.html">Browse Movies</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="allreviews.html">Reviews</a></li>
+        <li><a href="recommendations.html">Recommendations</a></li>
+        <li><a href="watchlist.html">Watchlist</a></li>
+      </ul>
+    </div>
+  </aside>
+
+  <!-- Main content -->
+  <main>
+    <div class="recommendations-header">
+      <h1>Recommendations</h1>
+    </div>
+
+    <!-- Movies You Recommended -->
+    <section id="userRecommendations">
+      <h2>Movies You Recommended</h2>
+      <div class="movie-grid" id="recommendedMoviesGrid">
+        <!-- Movie cards populated dynamically -->
+      </div>
+    </section>
+
+    <!-- Suggested Movies Based on Recommendations -->
+    <section id="suggestedMovies">
+      <h2>Because You Recommended...</h2>
+      <div class="movie-grid" id="suggestedMoviesGrid">
+        <!-- Suggested movie cards populated dynamically -->
+      </div>
+    </section>
+  </main>
+<script src="script.js"> </script>
+<!--
+- Fetches movies user recommended → fills first grid.  
+- Fetches suggested movies → fills second grid.  
+ -->
+</body>
+</html>

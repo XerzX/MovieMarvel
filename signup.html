@@ -1,0 +1,285 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>MovieMarvel - Sign Up</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #0D1B2A;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top Nav Bar */
+    .page-nav {
+      background-color: #0A1F44;
+      color: #FFD700;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between; 
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .nav-left {
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .page-nav.shifted {
+        margin-left: 240px;
+        transition: margin-left 0.3s ease;
+    }
+
+    .page-nav h1 {
+      font-family: 'Oswald', sans-serif;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #FFD700;
+      cursor: pointer;
+    }
+
+    /* Sidebar Menu */
+    .side-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: -240px; 
+      width: 240px;
+      height: 100%;
+      background-color: #0D1B2A;
+      color: #fff;
+      padding: 1rem;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    .side-menu.open {
+      left: 0;
+    }
+
+    .auth-actions {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .auth-actions button {
+      background-color: #FFC857;
+      border: none;
+      padding: 0.5rem;
+      font-weight: bold;
+      cursor: pointer;
+      border-radius: 4px;
+      color: #0A1F44;
+    }
+
+    .menu-links ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    .menu-links li {
+      margin-bottom: 1rem;
+    }
+
+    .menu-links a {
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+    }
+
+    .menu-links a:hover {
+      text-decoration: underline;
+    }
+
+    /* Card */
+    .card {
+      background-color: #F9F9F9;
+      color: #0A1F44;
+      border-radius: 8px;
+      max-width: 500px;
+      margin: 2rem auto;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+      overflow: hidden;
+    }
+
+    .card-nav {
+      background-color: #FFD700;
+      color: #0A1F44;
+      padding: 1rem;
+      text-align: left;
+    }
+
+    .card-nav h2 {
+      margin: 0;
+      font-size: 1.2rem;
+      font-family: 'Oswald', sans-serif;
+    }
+
+    .card-content {
+      padding: 2rem;
+      text-align: center;
+    }
+
+    .card-content label {
+      display: block;
+      margin-top: 1rem;
+      font-weight: bold;
+      text-align: left;
+    }
+
+    .card-content input[type="email"],
+    .card-content input[type="password"] {
+      width: 100%;
+      padding: 0.5rem;
+      margin-top: 0.5rem;
+      border: 1px solid #ECECEC;
+      border-radius: 4px;
+    }
+
+    /* Checkbox + Text */
+    .ack-container {
+      margin-top: 1rem;
+      margin-bottom: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      justify-content: center; 
+    }
+
+    .ack-text {
+      font-size: 0.9rem;
+      color: #0A1F44;
+      line-height: 1.2;
+      margin-bottom: 1rem;    
+      display: block;       
+    }
+
+    .ack-container input[type="checkbox"] {
+      margin: 0;
+      width: 18px;
+      height: 18px;
+      cursor: pointer;
+      border: 2px solid #0A1F44;
+      accent-color: #FFC857;
+    }
+
+    /* Buttons */
+    .signup-btn {
+      background-color: #FFC857;
+      color: #0A1F44;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      margin-top: 1.5rem;
+      cursor: pointer;
+      font-weight: bold;
+      border-radius: 25px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
+      transition: background-color 0.3s ease;
+    }
+
+    .signup-btn:hover {
+      background-color: #e6b94d;
+    }
+
+    .subscription {
+      margin-top: 3rem;
+      text-align: center;
+    }
+
+    .subscription h3 {
+      margin-bottom: 0.5rem;
+    }
+
+    .subscription a {
+      color: #FFC857;
+      text-decoration: none;
+      font-size: 0.9rem;
+    }
+
+    .subscription a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <!-- Top Navigation -->
+  <header>
+    <nav class="page-nav">
+        <div class="nav-left">
+  <button class="menu-toggle" aria-label="Open menu">☰</button>
+  <h1 class="logo">MovieMarvel</h1>
+  </div>
+</nav>
+  </header>
+
+  <!-- Sidebar Menu -->
+  <aside class="side-menu">
+    <div class="auth-actions">
+      <button class="btn-login">Login</button>
+      <button class="btn-signup">Sign Up</button>
+    </div>
+    <nav class="menu-links">
+      <ul>
+        <li><a href="/browse">Browse Movies</a></li>
+        <li><a href="/ratings">Ratings</a></li>
+        <li><a href="/reviews">Reviews</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+  <!-- Main Content -->
+  <main>
+    <div class="card">
+      <div class="card-nav">
+        <h2>MovieMarvel Sign Up</h2>
+      </div>
+      <div class="card-content">
+        <p>
+          By creating an account, you acknowledge that you agree to MovieMarvel's terms of service and privacy policy.
+        </p>
+        <form id="signupForm">
+          <div class="ack-container">
+            <input type="checkbox" id="acknowledge">
+            <label for="acknowledge" class="ack-text">
+              I acknowledge the terms of service and privacy policy
+            </label>
+          </div>
+
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="Enter your email">
+
+          <label for="password">Password</label>
+          <input type="password" id="password" placeholder="Enter your password">
+
+          <button type="submit" class="signup-btn" id="submitSignup">Sign Up</button>
+        </form>
+
+        <div class="subscription">
+          <h3>MovieMarvel Subscription</h3>
+          <a href="premium.html" id="learnMore">
+            Unlock exclusive content and advanced recommendations.
+          </a>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <!-- JavaScript (need js for menu to click, open and page nav to shift)-->
+  <script src="script.js"></script>
+</body>
+</html>

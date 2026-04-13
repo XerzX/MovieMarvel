@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="manifest" href="/site.webmanifest">
+    <meta name="theme-color" content="#0D1B2A">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <link rel="apple-touch-icon" href="/icons/icon-512.png">
+    <title>Your Reviews — MovieMarvel</title>
+    <meta name="description" content="Read and manage all the movie reviews you've written on MovieMarvel.">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;700&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --primary-navy: #0A1F44;
+            --primary-red: #D72638;
+            --secondary-yellow: #FFC857;
+            --secondary-gold: #FFD700;
+            --secondary-gray: #ECECEC;
+            --bg-main: #0D1B2A;
+            --bg-card-dark: #2E2E2E;
+            --bg-sidebar: #0A1F44;
+            --sidebar-width: 240px;
+            --text-white: #FFFFFF;
+            --text-light-gray: #B3B3B3;
+            --accent-blue: #1DB9F0;
+            --success: #4CAF50;
+            --error: #D90429;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-white);
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            overflow-x: hidden;
+        }
+
+        .ambient-bg {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            background:
+                radial-gradient(circle at 10% 20%, rgba(10, 31, 68, 0.6) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(215, 38, 56, 0.15) 0%, transparent 40%);
+        }
+
+        h1, h2, h3 { font-family: 'Oswald', sans-serif; margin-top: 0; color: var(--text-white); letter-spacing: 0.5px; }
+        p { line-height: 1.6; margin-top: 0; }
+
+        /* ── Sidebar ── */
+        .side-menu {
+            position: fixed;
+            top: 0;
+            left: calc(-1 * var(--sidebar-width));
+            width: var(--sidebar-width);
+            height: 100%;
+            background-color: var(--bg-sidebar);
+            color: var(--text-white);
+            padding: 1.5rem 1rem;
+            transition: left 0.3s ease;
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            border-right: 1px solid rgba(255, 215, 0, 0.15);
+            box-shadow: 4px 0 20px rgba(0,0,0,0.5);
+        }
+        .side-menu.open { left: 0; }
+
+        .side-menu-logo {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.3rem;
+            font-weight: 700;
+            color: var(--secondary-gold);
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .side-menu-logo::before {
+            content: '';
+            display: inline-block;
+            width: 22px; height: 22px;
+            background: linear-gradient(135deg, var(--primary-red), var(--secondary-yellow));
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+
+        body:not(.auth-mode-anonymous) .anonymous-only { display: none !important; }
+        body:not(.auth-mode-authenticated) .authenticated-only { display: none !important; }
+
+        .auth-actions { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 1.75rem; }
+        .auth-actions button {
+            background-color: var(--secondary-yellow);
+            border: none;
+            padding: 0.6rem 1rem;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            cursor: pointer;
+            border-radius: 6px;
+            color: var(--primary-navy);
+            transition: all 0.25s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .auth-actions button:hover { background-color: var(--secondary-gold); transform: translateY(-1px); }
+        .auth-actions .btn-login {
+            background-color: transparent;
+            border: 1px solid var(--secondary-yellow);
+            color: var(--secondary-yellow);
+        }
+        .auth-actions .btn-login:hover { background-color: rgba(255,200,87,0.1); color: var(--secondary-gold); }
+
+        .menu-links { flex: 1; }
+        .menu-links ul { list-style: none; padding: 0; margin: 0; }
+        .menu-links li { margin-bottom: 0.25rem; }
+        .menu-links a {
+            color: var(--text-light-gray);
+            text-decoration: none;
+            font-size: 0.95rem;
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            padding: 0.65rem 0.75rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+        .menu-links a:hover { color: var(--text-white); background-color: rgba(255,255,255,0.07); }
+        .menu-links a.active { color: var(--secondary-gold); background-color: rgba(255,215,0,0.08); }
+
+        /* ── Header ── */
+        header {
+            background-color: var(--primary-navy);
+            backdrop-filter: blur(12px);
+            padding: 0.85rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid rgba(255,215,0,0.15);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-left { display: flex; align-items: center; gap: 1rem; }
+        .menu-toggle {
+            background: none; border: none;
+            font-size: 1.5rem; color: var(--secondary-gold);
+            cursor: pointer; padding: 0.25rem 0.5rem;
+            border-radius: 6px; transition: all 0.2s ease;
+        }
+        .menu-toggle:hover { background-color: rgba(255,215,0,0.12); color: #fff; }
+
+        header h1 {
+            font-size: 1.75rem; margin: 0;
+            color: var(--secondary-gold);
+            text-transform: uppercase;
+            font-weight: 700; letter-spacing: 1px;
+            display: flex; align-items: center; gap: 10px;
+        }
+        header h1::before {
+            content: '';
+            display: inline-block;
+            width: 26px; height: 26px;
+            background: linear-gradient(135deg, var(--primary-red), var(--secondary-yellow));
+            border-radius: 7px;
+            box-shadow: 0 0 12px rgba(215,38,56,0.6);
+            flex-shrink: 0;
+        }
+
+        /* ── Layout ── */
+        main {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 2rem 1rem 4rem;
+            width: 100%;
+        }
+
+        /* ── Hero ── */
+        .page-hero {
+            width: 100%;
+            max-width: 860px;
+            text-align: center;
+            padding: 2.5rem 1rem 1.5rem;
+            animation: fadeIn 0.6s ease-out;
+        }
+        .page-hero h2 { font-size: 2.6rem; text-shadow: 0 4px 15px rgba(0,0,0,0.5); margin-bottom: 0.4rem; }
+        .page-hero h2 span { color: var(--secondary-gold); }
+        .page-hero p { color: var(--text-light-gray); font-size: 1.05rem; margin-bottom: 1.8rem; }
+
+        /* ── Pill Toggles ── */
+        .filter-toggles {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 2.5rem;
+        }
+
+        .pill-btn {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.15);
+            padding: 0.55rem 1.2rem;
+            border-radius: 30px;
+            color: var(--text-light-gray);
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.92rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-weight: 500;
+            letter-spacing: normal;
+            text-transform: none;
+        }
+        .pill-btn:hover { background: rgba(255,255,255,0.1); color: var(--text-white); transform: translateY(-2px); box-shadow: none; }
+        .pill-btn.active {
+            background: rgba(215,38,56,0.2);
+            border-color: var(--primary-red);
+            color: var(--text-white);
+            box-shadow: 0 4px 10px rgba(215,38,56,0.25);
+        }
+        .pill-btn.active:hover { transform: none; }
+
+        /* ── Search Bar ── */
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+            max-width: 860px;
+            margin: 0 auto 1.75rem;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .search-wrapper .search-icon {
+            position: absolute;
+            left: 1rem;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 1rem;
+            opacity: 0.45;
+            pointer-events: none;
+        }
+
+        #movieSearchInput {
+            width: 100%;
+            padding: 0.8rem 1rem 0.8rem 2.75rem;
+            background: rgba(255,255,255,0.06);
+            border: 1px solid rgba(255,255,255,0.15);
+            border-radius: 30px;
+            color: var(--text-white);
+            font-family: 'Roboto', sans-serif;
+            font-size: 0.97rem;
+            outline: none;
+            transition: border-color 0.2s, background 0.2s;
+        }
+
+        #movieSearchInput::placeholder { color: rgba(255,255,255,0.35); }
+
+        #movieSearchInput:focus {
+            border-color: rgba(255,215,0,0.45);
+            background: rgba(255,255,255,0.09);
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 0.9rem;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: rgba(255,255,255,0.4);
+            font-size: 1.1rem;
+            cursor: pointer;
+            padding: 0 0.2rem;
+            line-height: 1;
+            transition: color 0.15s;
+            display: none;
+            box-shadow: none;
+            text-transform: none;
+            letter-spacing: normal;
+        }
+        .search-clear:hover { color: var(--text-white); transform: translateY(-50%); box-shadow: none; }
+        .search-clear.visible { display: block; }
+
+        .search-count {
+            text-align: center;
+            font-size: 0.85rem;
+            color: var(--text-light-gray);
+            margin-bottom: 1rem;
+        }
+        .search-count span { color: var(--secondary-gold); font-weight: 600; }
+
+        /* ── Reviews List ── */
+        .reviews-section {
+            width: 100%;
+            max-width: 860px;
+            animation: fadeIn 0.4s ease-out;
+        }
+
+        .review-card {
+            background: rgba(255,255,255,0.04);
+            border: 1px solid rgba(255,255,255,0.09);
+            border-radius: 14px;
+            overflow: hidden;
+            margin-bottom: 1.25rem;
+            display: flex;
+            gap: 0;
+            transition: border-color 0.25s ease, transform 0.25s ease;
+            cursor: pointer;
+            animation: fadeUp 0.4s ease-out both;
+        }
+        .review-card:hover {
+            border-color: rgba(255,215,0,0.3);
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.5);
+        }
+
+        .review-poster {
+            flex-shrink: 0;
+            width: 90px;
+            object-fit: cover;
+            background: var(--bg-card-dark);
+            display: block;
+        }
+
+        .review-body {
+            padding: 1.1rem 1.4rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+            flex: 1;
+            min-width: 0;
+        }
+
+        .review-card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            gap: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .review-movie-title {
+            font-family: 'Oswald', sans-serif;
+            font-size: 1.15rem;
+            color: var(--text-white);
+            margin: 0;
+        }
+
+        .review-meta {
+            display: flex;
+            align-items: center;
+            gap: 0.6rem;
+            flex-shrink: 0;
+        }
+
+        .review-date {
+            font-size: 0.78rem;
+            color: var(--text-light-gray);
+        }
+
+        .review-username-badge {
+            font-size: 0.75rem;
+            color: var(--secondary-gold);
+            background: rgba(255,215,0,0.1);
+            border: 1px solid rgba(255,215,0,0.25);
+            border-radius: 20px;
+            padding: 2px 8px;
+            white-space: nowrap;
+        }
+
+        .review-text {
+            color: rgba(255,255,255,0.78);
+            font-size: 0.95rem;
+            line-height: 1.65;
+            margin: 0;
+            /* clamp to 3 lines */
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
+            line-clamp: 3;
+            overflow: hidden;
+        }
+
+        /* ── Empty / Loading States ── */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1rem;
+            padding: 4rem 1rem;
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+        .empty-icon { font-size: 4rem; opacity: 0.3; line-height: 1; }
+        .empty-state h3 { font-size: 1.4rem; color: rgba(255,255,255,0.5); margin-bottom: 0.25rem; }
+        .empty-state p { font-size: 0.95rem; color: var(--text-light-gray); opacity: 0.75; max-width: 380px; }
+
+        .action-btn {
+            background-color: var(--secondary-yellow);
+            color: var(--primary-navy);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            font-family: 'Roboto', sans-serif;
+            font-weight: 700;
+            font-size: 1rem;
+            border-radius: 30px;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-top: 0.5rem;
+        }
+        .action-btn:hover { background-color: var(--secondary-gold); transform: translateY(-2px); box-shadow: 0 6px 15px rgba(255,200,87,0.4); }
+
+        .hidden { display: none !important; }
+
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes spin { 100% { transform: rotate(360deg); } }
+    </style>
+</head>
+
+<body>
+    <div class="ambient-bg"></div>
+
+    <!-- Sidebar -->
+    <aside class="side-menu" id="sideMenu">
+        <div class="side-menu-logo">MovieMarvel</div>
+        <div class="auth-actions anonymous-only">
+            <button class="btn-login" type="button" onclick="location.href='index.html'">Login</button>
+            <button type="button" onclick="location.href='index.html'">Sign Up</button>
+        </div>
+        <div class="auth-actions authenticated-only">
+            <button class="btn-login logout-btn" id="sidebarLogout" type="button" style="border:1px solid rgba(255,255,255,0.2);background:transparent;width:100%;">Logout</button>
+        </div>
+        <nav class="menu-links">
+            <ul>
+                <li><a href="browse.html">Browse Movies</a></li>
+                <li class="authenticated-only"><a href="recommendations.html">Recommendations</a></li>
+                <li class="authenticated-only"><a href="watchlist.html">Watchlist</a></li>
+                <li><a href="ratings.html">Ratings</a></li>
+                <li><a href="reviews.html" class="active">Reviews</a></li>
+            </ul>
+        </nav>
+    </aside>
+
+    <!-- Header -->
+    <header id="siteHeader">
+        <div class="nav-left">
+            <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
+            <h1>
+                <a href="index.html"
+                   onclick="sessionStorage.removeItem('mm_index_page');sessionStorage.removeItem('mm_index_scroll');"
+                   style="color:inherit;text-decoration:none;">MovieMarvel</a>
+            </h1>
+        </div>
+        <div style="display:flex;align-items:center;gap:1rem;">
+            <span class="nav-user-greeting authenticated-only" style="color:var(--text-light-gray);font-weight:500;"></span>
+            <button class="logout-btn authenticated-only" id="headerLogout"
+                style="border:1px solid rgba(255,255,255,0.2);background:transparent;padding:0.8rem 1.5rem;border-radius:25px;color:var(--text-white);font-weight:700;cursor:pointer;display:none;font-family:'Roboto',sans-serif;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.5px;">
+                Logout
+            </button>
+        </div>
+    </header>
+
+    <main id="mainContent">
+
+        <section class="page-hero">
+            <h2>Your <span id="viewLabel">Reviews</span></h2>
+            <p id="viewDesc">All the reviews you've written on MovieMarvel.</p>
+
+            <div class="filter-toggles" id="filterToggles">
+                <button class="pill-btn active" data-sort="newest">Newest First</button>
+                <button class="pill-btn" data-sort="oldest">Oldest First</button>
+                <button class="pill-btn" data-sort="title_asc">Movie A → Z</button>
+                <button class="pill-btn" data-sort="title_desc">Movie Z → A</button>
+            </div>
+        </section>
+
+        <!-- Search -->
+        <div class="search-wrapper" id="searchWrapper">
+            <span class="search-icon">🔍</span>
+            <input
+                type="text"
+                id="movieSearchInput"
+                placeholder="Search your reviews by movie title…"
+                autocomplete="off"
+                aria-label="Search reviews by movie title"
+            >
+            <button class="search-clear" id="searchClear" aria-label="Clear search">✕</button>
+        </div>
+        <p class="search-count hidden" id="searchCount"></p>
+
+        <!-- Reviews list -->
+        <section class="reviews-section" id="reviewsSection">
+            <!-- Loading -->
+            <div id="loadingState" class="empty-state">
+                <div class="empty-icon" style="animation: spin 1.5s linear infinite; opacity: 0.5;">✍️</div>
+                <p>Loading your reviews…</p>
+            </div>
+
+            <!-- List -->
+            <div id="reviewsList" class="hidden"></div>
+
+            <!-- Empty -->
+            <div id="emptyState" class="empty-state hidden">
+                <div class="empty-icon" id="emptyIcon">✍️</div>
+                <h3 id="emptyTitle">No reviews found</h3>
+                <p id="emptyDesc">You haven't written any reviews yet. Browse a movie and share your thoughts!</p>
+                <button class="action-btn" onclick="location.href='browse.html'">Browse Movies</button>
+            </div>
+        </section>
+
+    </main>
+
+    <script type="module" src="auth.js"></script>
+    <script defer src="signup-script.js?v=2"></script>
+    <script type="module" src="reviews-script.js"></script>
+</body>
+
+</html>
