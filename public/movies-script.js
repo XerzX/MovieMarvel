@@ -5,15 +5,13 @@ document.addEventListener('DOMContentLoaded', () => {
     const currentPageBtn = document.getElementById('currentPageBtn');
 
     let currentPage = 1;
-    let totalPages = 1; // Will be updated by API response
+    let totalPages = 1;
 
-    // Pull configurations securely from our window.ENV namespace constructed in config.js
     const API_KEY = window.ENV && window.ENV.TMDB_API_KEY;
     const BASE_URL = window.ENV && window.ENV.TMDB_BASE_URL;
 
-    // Check if configuration exists
     if (!API_KEY || API_KEY === "") {
-        console.error("TMDB API Key is missing or invalid. Please update public/config.js");
+        console.error("TMDB API Key is missing. Please update public/config.js");
         if (movieGrid) {
             movieGrid.innerHTML = `
                 <div style="grid-column: 1 / -1; text-align: center; padding: 2rem; background: rgba(217, 4, 41, 0.1); border-radius: 12px; border: 1px solid var(--error);">
@@ -21,38 +19,32 @@ document.addEventListener('DOMContentLoaded', () => {
                     <p>Please enter your TMDB API Key in <code>public/config.js</code> to view movies.</p>
                 </div>`;
         }
-        return; // Halt execution
+        return;
     }
 
-    /**
-     * Fetch popular movies from TMDB API
-     * @param {number} page
-     */
     async function fetchPopularMovies(page) {
         try {
-            // Optional visual feedback while loading
             movieGrid.style.opacity = '0.5';
 
             const url = `${BASE_URL}/movie/popular?api_key=${API_KEY}&language=en-US&page=${page}`;
             const response = await fetch(url);
-            
+
             if (!response.ok) {
                 throw new Error(`API Error: ${response.status} ${response.statusText}`);
             }
 
             const data = await response.json();
-            
-            totalPages = Math.min(data.total_pages, 500); // TMDB caps pagination at 500 pages usually
+
+            // TMDB caps queryable results at 500 pages
+            totalPages = Math.min(data.total_pages, 500);
             renderMovies(data.results);
             updatePaginationUI();
-            
 
-            
         } catch (error) {
             console.error("Failed to fetch movies:", error);
             movieGrid.innerHTML = `
                 <div style="grid-column: 1 / -1; text-align: center; color: var(--error);">
-                    <p>Failed to load movies. Ensure your API key is active and you have network connectivity.</p>
+                    <p>Failed to load movies. Check your API key and network connection.</p>
                 </div>
             `;
         } finally {
@@ -60,25 +52,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * Parse the movie array and construct the HTML cards
-     * @param {Array} movies
-     */
     function renderMovies(movies) {
-        movieGrid.innerHTML = ''; // Clear existing movies
+        movieGrid.innerHTML = '';
 
         movies.forEach(movie => {
-            // Ensure we have a valid image path, or provide a placeholder
-            const imageUrl = movie.poster_path 
+            const imageUrl = movie.poster_path
                 ? `https://image.tmdb.org/t/p/w500${movie.poster_path}`
                 : 'https://via.placeholder.com/500x750?text=No+Image';
 
             const card = document.createElement('div');
             card.className = 'movie-card';
-            
-            // Setting a title attribute for native tooltips if title gets truncated
             card.title = movie.title;
-            
+
             card.innerHTML = `
                 <img class="movie-poster" src="${imageUrl}" alt="${movie.title} Poster" loading="lazy">
                 <div class="movie-info">
@@ -86,23 +71,20 @@ document.addEventListener('DOMContentLoaded', () => {
                 </div>
             `;
 
-            // Optional: Handle mock clicking on a movie
+            // Save scroll and page position so the back button can restore state
             card.addEventListener('click', () => {
-                console.log(`Clicked on: ${movie.title} (ID: ${movie.id})`);
+                sessionStorage.setItem('mm_index_page', currentPage);
+                sessionStorage.setItem('mm_index_scroll', window.scrollY);
+                window.location.href = `movie.html?id=${movie.id}`;
             });
 
             movieGrid.appendChild(card);
         });
     }
 
-    /**
-     * Updates the pagination button states and page number indicator
-     */
     function updatePaginationUI() {
-        // Current Page
         currentPageBtn.textContent = currentPage;
-        
-        // Previous Page Check
+
         if (currentPage > 1) {
             prevPageBtn.textContent = currentPage - 1;
             prevPageBtn.classList.remove('hidden-page');
@@ -111,8 +93,7 @@ document.addEventListener('DOMContentLoaded', () => {
             prevPageBtn.classList.add('hidden-page');
             prevPageBtn.disabled = true;
         }
-        
-        // Next Page Check
+
         if (currentPage < totalPages) {
             nextPageBtn.textContent = currentPage + 1;
             nextPageBtn.classList.remove('hidden-page');
@@ -123,9 +104,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /**
-     * Custom smooth scroll function for controlled duration
-     */
+    // easeInOutQuad for smooth acceleration and deceleration
     function smoothScrollToTop(duration = 600) {
         const startPosition = window.pageYOffset;
         let startTime = null;
@@ -134,41 +113,57 @@ document.addEventListener('DOMContentLoaded', () => {
             if (startTime === null) startTime = currentTime;
             const timeElapsed = currentTime - startTime;
             const progress = Math.min(timeElapsed / duration, 1);
-            
-            // Easing function: easeInOutQuad for smooth acceleration and deceleration
-            const ease = progress < 0.5 
-                ? 2 * progress * progress 
+            const ease = progress < 0.5
+                ? 2 * progress * progress
                 : 1 - Math.pow(-2 * progress + 2, 2) / 2;
 
             window.scrollTo(0, startPosition - (startPosition * ease));
 
-            if (timeElapsed < duration) {
-                requestAnimationFrame(animation);
-            }
+            if (timeElapsed < duration) requestAnimationFrame(animation);
         }
 
         requestAnimationFrame(animation);
     }
 
-    // Event Listeners for Pagination
+    // -- Pagination --
     prevPageBtn.addEventListener('click', () => {
         if (currentPage > 1) {
             currentPage--;
-            fetchPopularMovies(currentPage).then(() => {
-                smoothScrollToTop(800); // 800ms duration for a comfortable cinematic glide
-            });
+            fetchPopularMovies(currentPage).then(() => { smoothScrollToTop(800); });
         }
     });
 
     nextPageBtn.addEventListener('click', () => {
         if (currentPage < totalPages) {
             currentPage++;
-            fetchPopularMovies(currentPage).then(() => {
-                smoothScrollToTop(800);
-            });
+            fetchPopularMovies(currentPage).then(() => { smoothScrollToTop(800); });
         }
     });
 
-    // Initialize the gallery on load
-    fetchPopularMovies(currentPage);
+    // -- State Restoration --
+    // Restores the page and scroll position when the user navigates back from a movie detail page
+    const savedPage = sessionStorage.getItem('mm_index_page');
+    const savedScroll = sessionStorage.getItem('mm_index_scroll');
+
+    if (savedPage) {
+        currentPage = parseInt(savedPage, 10) || 1;
+        sessionStorage.removeItem('mm_index_page');
+        sessionStorage.removeItem('mm_index_scroll');
+    }
+
+    fetchPopularMovies(currentPage).then(() => {
+        if (savedScroll) {
+            window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' });
+        }
+
+        // Exposed so the nav logo can reset to page 1 from anywhere on this page
+        window.resetGallery = () => {
+            sessionStorage.removeItem('mm_index_page');
+            sessionStorage.removeItem('mm_index_scroll');
+            currentPage = 1;
+            fetchPopularMovies(1).then(() => {
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            });
+        };
+    });
 });

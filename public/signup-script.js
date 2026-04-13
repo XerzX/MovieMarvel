@@ -1,11 +1,11 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // ── Sidebar ────────────────────────────────────────────────────────────
-    const sideMenu    = document.getElementById('sideMenu');
-    const menuToggle  = document.getElementById('menuToggle');
-    const siteHeader  = document.getElementById('siteHeader');
+    // -- Sidebar --
+    const sideMenu = document.getElementById('sideMenu');
+    const menuToggle = document.getElementById('menuToggle');
+    const siteHeader = document.getElementById('siteHeader');
     const mainContent = document.getElementById('mainContent');
 
-    // Backdrop overlay (created dynamically so it doesn't clutter the HTML)
+    // Backdrop created in JS to avoid extra markup in every HTML file
     const backdrop = document.createElement('div');
     backdrop.style.cssText = `
         display: none;
@@ -41,28 +41,31 @@ document.addEventListener('DOMContentLoaded', () => {
     if (menuToggle) menuToggle.addEventListener('click', toggleSidebar);
     backdrop.addEventListener('click', closeSidebar);
 
-    // Close on Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && sideMenu.classList.contains('open')) closeSidebar();
     });
 
-    // ── Top-level Navigation elements ──────────────────────────────────────
+    // -- Navigation & Panel Elements --
     const signupBtn = document.getElementById('signupBtn');
-    const logoBtn   = document.getElementById('logoBtn');
+    const logoBtn = document.getElementById('logoBtn');
 
-    // Hidden Panel elements
     const signupForm = document.getElementById('signupForm');
+    const loginForm = document.getElementById('loginForm');
     const paymentPage = document.getElementById('paymentPage');
     const premiumPage = document.getElementById('premiumPage');
 
-    // Interactive Form elements
     const learnMoreLink = document.getElementById('learnMore');
     const submitSignupBtn = document.getElementById('submitSignup');
     const subscribeCheckbox = document.getElementById('subscribe');
     const emailInput = document.getElementById('email');
     const passwordInput = document.getElementById('password');
 
-    // ── Panel backdrop & scroll-lock ────────────────────────────────────────
+    const submitLoginBtn = document.getElementById('submitLogin');
+    const loginEmailInput = document.getElementById('loginEmail');
+    const loginPasswordInput = document.getElementById('loginPassword');
+    const switchToSignupBtn = document.getElementById('switchToSignupBtn');
+
+    // -- Panel Backdrop & Scroll Lock --
     const panelBackdrop = document.getElementById('panelBackdrop');
 
     function showPanelBackdrop() {
@@ -75,22 +78,20 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.classList.remove('panel-open');
     }
 
-    // Utility: hide all panels and dismiss backdrop
     function hideAllPanels() {
-        signupForm.classList.add('hidden');
-        paymentPage.classList.add('hidden');
-        premiumPage.classList.add('hidden');
+        if (signupForm) signupForm.classList.add('hidden');
+        if (loginForm) loginForm.classList.add('hidden');
+        if (paymentPage) paymentPage.classList.add('hidden');
+        if (premiumPage) premiumPage.classList.add('hidden');
         hidePanelBackdrop();
     }
 
-    // Utility: show a specific panel
     function showPanel(panel) {
         hideAllPanels();
         panel.classList.remove('hidden');
         showPanelBackdrop();
     }
 
-    // Clicking the backdrop closes all panels
     if (panelBackdrop) {
         panelBackdrop.addEventListener('click', () => {
             hideAllPanels();
@@ -98,16 +99,15 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // Escape key closes panels
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape') {
-            const anyOpen = [signupForm, paymentPage, premiumPage]
-                .some(p => !p.classList.contains('hidden'));
+            const anyOpen = [signupForm, loginForm, paymentPage, premiumPage]
+                .some(p => p && !p.classList.contains('hidden'));
             if (anyOpen) { hideAllPanels(); resetForm(); }
         }
     });
 
-    // 1. Header "Sign Up" button opens the Sign Up form
+    // -- Panel Triggers --
     if (signupBtn) {
         signupBtn.addEventListener('click', () => {
             showPanel(signupForm);
@@ -115,7 +115,30 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 2. "Learn More" link opens the Premium info block
+    if (switchToSignupBtn) {
+        switchToSignupBtn.addEventListener('click', (e) => {
+            e.preventDefault();
+            showPanel(signupForm);
+            setTimeout(() => emailInput.focus(), 100);
+        });
+    }
+
+    document.querySelectorAll('.auth-actions .btn-login').forEach(btn => {
+        btn.addEventListener('click', () => {
+            closeSidebar();
+            showPanel(loginForm);
+            setTimeout(() => loginEmailInput.focus(), 150);
+        });
+    });
+
+    document.querySelectorAll('.auth-actions .btn-signup').forEach(btn => {
+        btn.addEventListener('click', () => {
+            closeSidebar();
+            showPanel(signupForm);
+            setTimeout(() => emailInput.focus(), 150);
+        });
+    });
+
     if (learnMoreLink) {
         learnMoreLink.addEventListener('click', (e) => {
             e.preventDefault();
@@ -123,47 +146,85 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    // 3. "Sign Up Now" form submission logic
+    // -- Sign Up Form Submission --
     if (submitSignupBtn) {
-        submitSignupBtn.addEventListener('click', (e) => {
-            // Prevent the default browser form submission (which reloads the page)
+        submitSignupBtn.addEventListener('click', async (e) => {
             e.preventDefault();
 
-            // Very basic empty-state validation to mimic HTML required attributes
             if (!emailInput.value.trim() || !passwordInput.value.trim()) {
                 alert('Please enter both your email and password to continue.');
                 return;
             }
 
-            // Route based on whether they checked the premium subscription box
+            const originalBtnText = submitSignupBtn.textContent;
+            submitSignupBtn.textContent = 'Registering...';
+            submitSignupBtn.disabled = true;
+
+            const res = await window.MovieMarvelAuth.registerUser(emailInput.value.trim(), passwordInput.value.trim());
+
+            submitSignupBtn.textContent = originalBtnText;
+            submitSignupBtn.disabled = false;
+
+            if (!res.success) {
+                alert(res.message);
+                return;
+            }
+
+            // If the user subscribed, show the payment panel next
             if (subscribeCheckbox && subscribeCheckbox.checked) {
                 showPanel(paymentPage);
             } else {
-                alert('Account created successfully! Welcome to MovieMarvel.');
                 hideAllPanels();
                 resetForm();
             }
         });
     }
 
-    // 4. Dummy Payment button handling to demonstrate the flow completion
+    // -- Login Form Submission --
+    if (submitLoginBtn) {
+        submitLoginBtn.addEventListener('click', async (e) => {
+            e.preventDefault();
+
+            if (!loginEmailInput.value.trim() || !loginPasswordInput.value.trim()) {
+                alert('Please enter both your email and password.');
+                return;
+            }
+
+            const originalBtnText = submitLoginBtn.textContent;
+            submitLoginBtn.textContent = 'Logging in...';
+            submitLoginBtn.disabled = true;
+
+            const res = await window.MovieMarvelAuth.loginUser(loginEmailInput.value.trim(), loginPasswordInput.value.trim());
+
+            submitLoginBtn.textContent = originalBtnText;
+            submitLoginBtn.disabled = false;
+
+            if (!res.success) {
+                alert(res.message);
+                return;
+            }
+
+            hideAllPanels();
+            resetForm();
+        });
+    }
+
+    // -- Payment Buttons (demo flow) --
     const paymentButtons = document.querySelectorAll('.payment-btn');
     paymentButtons.forEach(btn => {
         btn.addEventListener('click', () => {
             alert('Subscription payment successful! Welcome to MovieMarvel Premium.');
-
-            // Go back to absolute default state
             hideAllPanels();
             resetForm();
         });
     });
 
-    // 5. Cancel buttons to close panels and return to unobstructed landing
+    // -- Close / Cancel Buttons --
     const cancelBtns = document.querySelectorAll('.cancel-btn');
     cancelBtns.forEach(btn => {
         btn.addEventListener('click', () => {
             if (btn.closest('#premiumPage')) {
-                // If closing premium page, go back to signup form
+                // Return to signup instead of fully closing
                 showPanel(signupForm);
             } else {
                 hideAllPanels();
@@ -172,19 +233,36 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // 6. Logo click to go back to landing page natively without reload
+    // -- Logo Click --
     if (logoBtn) {
         logoBtn.addEventListener('click', (e) => {
             e.preventDefault();
             hideAllPanels();
             resetForm();
+            if (typeof window.resetGallery === 'function') window.resetGallery();
         });
     }
 
-    // Helper function to reset form state after a completed action
+    // -- Logout --
+    const logoutBtns = document.querySelectorAll('.logout-btn');
+    logoutBtns.forEach(btn => {
+        btn.addEventListener('click', async () => {
+            if (window.MovieMarvelAuth && window.MovieMarvelAuth.logoutUser) {
+                const res = await window.MovieMarvelAuth.logoutUser();
+                if (res.success) {
+                    if (sideMenu && sideMenu.classList.contains('open')) closeSidebar();
+                } else {
+                    alert("Failed to logout: " + res.message);
+                }
+            }
+        });
+    });
+
     function resetForm() {
         if (emailInput) emailInput.value = '';
         if (passwordInput) passwordInput.value = '';
+        if (loginEmailInput) loginEmailInput.value = '';
+        if (loginPasswordInput) loginPasswordInput.value = '';
         if (subscribeCheckbox) subscribeCheckbox.checked = false;
     }
 });

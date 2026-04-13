@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>User Profile</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Oswald:wght@500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #0D1B2A;
+      color: #FFD700;
+      margin: 0;
+      padding: 0;
+    }
+
+    /* Top Nav Bar */
+    .page-nav {
+      background-color: #0A1F44;
+      color: #FFD700;
+      padding: 1rem 2rem;
+      display: flex;
+      justify-content: space-between; 
+      align-items: center;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .menu-toggle {
+      background: none;
+      border: none;
+      font-size: 1.5rem;
+      color: #FFD700;
+      cursor: pointer;
+    }
+
+    /* Sidebar Menu */
+    .side-menu {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 240px;
+      height: 100%;
+      background-color: #0D1B2A;
+      color: #fff;
+      padding: 1rem;
+      z-index: 1000;
+    }
+
+    .side-menu.open {
+      display: block;
+    }
+
+    .user-info {
+      text-align: center;
+      margin-bottom: 1.5rem;
+    }
+
+    .user-info img {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      border: 2px solid #FFD700;
+      cursor: pointer;
+    }
+
+    /* Badge styles */
+    .badge {
+      font-size: 0.8rem;
+      font-weight: bold;
+      padding: 0.3rem 0.6rem;
+      border-radius: 12px;
+    }
+    .badge.free {
+      background-color: #555;
+      color: #FFD700;
+    }
+    .badge.premium {
+      background-color: #FFD700;
+      color: #0A1F44;
+    }
+
+    /* Buttons */
+    .btn {
+      padding: 0.7rem 1.4rem;
+      border-radius: 25px;
+      font-weight: bold;
+      cursor: pointer;
+      border: none;
+      transition: background-color 0.3s ease;
+    }
+    .btn.logout {
+      background-color: #FF4C4C;
+      color: #fff;
+    }
+    .btn.logout:hover {
+      background-color: #cc0000;
+    }
+    .btn.delete {
+      background-color: #8B0000;
+      color: #fff;
+    }
+    .btn.delete:hover {
+      background-color: #5a0000;
+    }
+    #subscribeBtn {
+      background-color: #FFC857;
+      color: #0A1F44;
+      margin-top: 2rem;
+    }
+    #subscribeBtn:hover {
+      background-color: #e6b94d;
+    }
+
+    /* Main container*/
+    main {
+      max-width: 800px;
+      margin: 2rem auto;
+      padding: 2rem;
+      background: #1B263B;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.5);
+      border: 2px solid #FFD700; 
+    }
+
+    .profile-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .profile-header img {
+      width: 40px;
+      height: 40px;
+    }
+
+    /* Activity Section */
+    .activity {
+      margin-top: 2rem;
+      padding: 1.5rem;
+      background: #0A1F44;
+      border-radius: 12px;
+    }
+
+    .activity p {
+      margin: 0.5rem 0;
+    }
+
+    .activity a {
+      color: #FFD700;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .activity a:hover {
+      text-decoration: underline;
+    }
+
+    /* Modal styles */
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 2000;
+      left: 0; top: 0;
+      width: 100%; height: 100%;
+      background-color: rgba(0,0,0,0.7);
+    }
+    .modal-content {
+      background-color: #1B263B;
+      margin: 15% auto;
+      padding: 2rem;
+      border: 2px solid #FFD700;
+      border-radius: 12px;
+      width: 300px;
+      text-align: center;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Page nav bar -->
+  <nav class="page-nav">
+    <div class="nav-left">
+      <button class="menu-toggle" aria-label="Open menu">☰</button>
+      <h1 class="logo">MovieMarvel</h1>
+    </div>
+  </nav>
+
+  <!-- Side menu -->
+  <nav class="side-menu" id="sideMenu">
+    <div class="user-info">
+      <img src="avatar.png" id="profileLogo">
+      <h4 id="username">Username</h4>
+      <p>Account Type: <span class="badge free" id="accountBadge">Free</span></p>
+    </div>
+
+    <div class="auth-actions">
+      <button id="logoutBtn" class="btn logout">Logout</button>
+      <button id="deleteAccountBtn" class="btn delete">Delete Account</button>
+    </div>
+
+    <div class="menu-links">
+      <ul>
+        <li><a href="browse.html">Browse Movies</a></li>
+        <li><a href="profile.html">Profile</a></li>
+        <li><a href="allreviews.html">Reviews</a></li>
+        <li><a href="recommendations.html">Recommendations</a></li>
+        <li><a href="watchlist.html">Watchlist</a></li>
+      </ul>
+    </div>
+  </nav>
+
+  <!-- Main content -->
+  <main>
+    <div class="profile-header">
+      <img src="logo.png" alt="Site Logo">
+      <h1>User Profile</h1>
+      <span class="badge free" id="accountBadgeMain">Free</span>
+    </div>
+
+    <p><strong>Email:</strong> <span id="email"></span></p>
+    <p><strong>Joined:</strong> <span id="joinedDate"></span></p>
+    <p><strong>Preferences:</strong> <span id="preferences"></span></p>
+
+    <div class="account-actions">
+      <button id="logoutBtnMain" class="btn logout">Logout</button>
+      <button id="deleteAccountBtnMain" class="btn delete">Delete Account</button>
+    </div>
+
+    <div class="premium-section">
+      <button id="subscribeBtn" class="btn">Switch to Premium</button>
+    </div>
+
+    <div class="activity">
+      <p><strong>Reviews Written:</strong> <a href="allreviews.html" id="reviewsCount"></a></p>
+      <p><strong>Movies in Watchlist:</strong> <a href="watchlist.html" id="watchlistCount"></a></p>
+      <p><strong>Recommendations Sent:</strong> <a href="recommendations.html" id="recommendationsCount"></a></p>
+    </div>
+  </main>
+
+  <!-- Logout Modal -->
+  <div id="logoutModal" class="modal">
+    <div class="modal-content">
+      <h2>Confirm Logout</h2>
+      <p>Are you sure you want to log out?</p>
+      <button id="confirmLogout" class="btn logout">Yes, Logout</button>
+      <button id="cancelLogout" class="btn">Cancel</button>
+    </div>
+  </div>
+
+  <!-- Delete Account Modal -->
+  <div id="deleteModal" class="modal">
+    <div class="modal-content">
+      <h2>Delete Account</h2>
+      <p>This action cannot be undone. Proceed?</p>
+      <button id="confirmDelete" class="btn delete">Yes, Delete</button>
+      <button id="cancelDelete" class="btn">Cancel</button>
+    </div>
+  </div>
+
+  <script src="script.js"></script>>
+<!--- Modals are hidden by default.  
+- Clicking Logout/Delete → shows the respective modal.  
+- Confirm → executes backend action.  
+- Cancel → hides modal again. 
+- Badges and activity counts are filled dynamically from backend data.-->
+    </body>
+</html>

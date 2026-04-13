@@ -4,7 +4,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MovieMarvel - Discover Cinema</title>
+    <title>Browse Movies — MovieMarvel</title>
+    <meta name="description"
+        content="Search and browse thousands of movies on MovieMarvel. Find ratings, reviews, and discover your next favourite film.">
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -76,7 +78,6 @@
             color: var(--text-white);
             letter-spacing: 0.5px;
         }
-
 
         p {
             line-height: 1.6;
@@ -200,10 +201,16 @@
             font-weight: 400;
         }
 
-        .menu-links a:hover {
+        .menu-links a:hover,
+        .menu-links a.active {
             color: var(--text-white);
             background-color: rgba(255, 255, 255, 0.07);
             text-decoration: none;
+        }
+
+        .menu-links a.active {
+            color: var(--secondary-gold);
+            background-color: rgba(255, 215, 0, 0.08);
         }
 
         /* ── Header ── */
@@ -308,30 +315,9 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
             padding: 2rem 1rem;
             width: 100%;
             box-sizing: border-box;
-        }
-
-        /* Welcome text when forms are hidden */
-        .hero-placeholder {
-            text-align: center;
-            max-width: 600px;
-            margin: auto;
-            animation: fadeIn 1s ease-out;
-        }
-
-        .hero-placeholder h2 {
-            color: var(--text-white);
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
-        }
-
-        .hero-placeholder p {
-            color: var(--text-light-gray);
-            font-size: 1.2rem;
         }
 
         /* Panel backdrop */
@@ -354,17 +340,133 @@
             visibility: visible;
         }
 
-        /* Prevent body scroll when a panel is open */
         body.panel-open {
             overflow: hidden;
+        }
+
+        /* ── Browse Hero ── */
+        .browse-hero {
+            width: 100%;
+            max-width: 760px;
+            text-align: center;
+            padding: 2.5rem 1rem 2rem;
+            animation: fadeIn 0.7s ease-out;
+        }
+
+        .browse-hero h2 {
+            font-size: 2.6rem;
+            color: var(--text-white);
+            margin-bottom: 0.5rem;
+            text-shadow: 0 4px 15px rgba(0, 0, 0, 0.5);
+        }
+
+        .browse-hero h2 span {
+            color: var(--secondary-gold);
+        }
+
+        .browse-hero p {
+            color: var(--text-light-gray);
+            font-size: 1.05rem;
+            margin-bottom: 2rem;
+        }
+
+        /* ── Search Bar (standalone, large) ── */
+        .browse-search-form {
+            display: flex;
+            gap: 0;
+            width: 100%;
+            max-width: 620px;
+            margin: 0 auto;
+            border-radius: 50px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 215, 0, 0.2);
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            transition: box-shadow 0.3s ease;
+        }
+
+        .browse-search-form:focus-within {
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.6), 0 0 0 2px var(--secondary-gold);
+        }
+
+        #browseSearchInput {
+            flex: 1;
+            background: transparent;
+            border: none;
+            padding: 1rem 1.5rem;
+            font-size: 1.05rem;
+            font-family: 'Roboto', sans-serif;
+            color: var(--text-white);
+            outline: none;
+            min-width: 0;
+        }
+
+        #browseSearchInput::placeholder {
+            color: rgba(255, 255, 255, 0.38);
+        }
+
+        #browseSearchBtn {
+            background: linear-gradient(135deg, var(--primary-red), #f03a4d);
+            color: var(--text-white);
+            border: none;
+            padding: 1rem 1.75rem;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Roboto', sans-serif;
+            cursor: pointer;
+            border-radius: 0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            box-shadow: none;
+            transition: background 0.25s ease;
+            white-space: nowrap;
+        }
+
+        #browseSearchBtn:hover {
+            background: linear-gradient(135deg, #c41e30, var(--primary-red));
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* ── Empty State ── */
+        .browse-empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+            padding: 3rem 1rem;
+            color: var(--text-light-gray);
+            text-align: center;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .browse-empty-state .empty-icon {
+            font-size: 4rem;
+            opacity: 0.35;
+            line-height: 1;
+        }
+
+        .browse-empty-state h3 {
+            font-size: 1.4rem;
+            color: rgba(255, 255, 255, 0.5);
+            margin-bottom: 0.25rem;
+        }
+
+        .browse-empty-state p {
+            font-size: 0.95rem;
+            color: var(--text-light-gray);
+            opacity: 0.7;
+            max-width: 360px;
         }
 
         /* ── Movie Gallery ── */
         .movie-section {
             width: 100%;
             max-width: 1200px;
-            margin: 2rem auto;
-            animation: fadeIn 1s ease-out;
+            margin: 0 auto;
+            animation: fadeIn 0.4s ease-out;
         }
 
         .movie-grid {
@@ -414,6 +516,60 @@
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
+        }
+
+        /* ── Search Results Header ── */
+        .search-results-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 1.5rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 1px solid rgba(255, 215, 0, 0.15);
+        }
+
+        .search-results-header h2 {
+            color: var(--text-white);
+            font-size: 1.4rem;
+            margin: 0;
+        }
+
+        .search-results-header h2 span {
+            color: var(--secondary-gold);
+        }
+
+        .clear-search-btn {
+            background: transparent;
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: var(--text-light-gray);
+            padding: 0.4rem 1rem;
+            font-size: 0.85rem;
+            border-radius: 20px;
+            box-shadow: none;
+            text-transform: none;
+            letter-spacing: normal;
+            font-weight: 400;
+        }
+
+        .clear-search-btn:hover {
+            background: rgba(255, 255, 255, 0.07);
+            border-color: rgba(255, 255, 255, 0.35);
+            color: var(--text-white);
+            transform: none;
+            box-shadow: none;
+        }
+
+        .no-results {
+            grid-column: 1 / -1;
+            text-align: center;
+            padding: 3rem 1rem;
+            color: var(--text-light-gray);
+        }
+
+        .no-results h3 {
+            color: var(--text-white);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
         }
 
         /* ── Pagination ── */
@@ -474,14 +630,12 @@
             overflow-y: auto;
             border-radius: 16px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8);
-            /* Fixed, centered in viewport */
             position: fixed;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%) scale(1);
             z-index: 300;
             box-sizing: border-box;
-            /* Entrance animation */
             animation: panelIn 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
         }
 
@@ -496,7 +650,6 @@
             margin-top: 0;
         }
 
-        /* Decorative top border for panels */
         .panel::before {
             content: '';
             position: absolute;
@@ -558,7 +711,6 @@
             color: #a0aec0;
         }
 
-        /* Shared checkbox row styles */
         .ack-container,
         .checkbox-container {
             display: flex;
@@ -794,18 +946,6 @@
             }
         }
 
-        @keyframes slideUp {
-            from {
-                opacity: 0;
-                transform: translateY(30px) scale(0.98);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
-            }
-        }
-
         @keyframes panelIn {
             from {
                 opacity: 0;
@@ -818,119 +958,23 @@
             }
         }
 
-        /* ── Search Bar ── */
-        .search-wrapper {
-            position: relative;
-            display: flex;
-            align-items: center;
-        }
-
-        .search-input {
-            background: rgba(255, 255, 255, 0.08);
-            border: 1px solid rgba(255, 215, 0, 0.2);
-            border-radius: 30px;
-            padding: 0.55rem 1rem 0.55rem 2.6rem;
-            color: var(--text-white);
-            font-family: 'Roboto', sans-serif;
-            font-size: 0.95rem;
-            width: 220px;
-            transition: all 0.3s ease;
-            outline: none;
-            box-sizing: border-box;
-        }
-
-        .search-input::placeholder {
-            color: rgba(255, 255, 255, 0.4);
-        }
-
-        .search-input:focus {
-            background: rgba(255, 255, 255, 0.13);
-            border-color: var(--secondary-gold);
-            box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.15);
-            width: 280px;
-        }
-
-        .search-icon {
-            position: absolute;
-            left: 0.85rem;
-            color: rgba(255, 215, 0, 0.6);
-            font-size: 0.9rem;
-            pointer-events: none;
-        }
-
-        /* ── Search Results Section ── */
-        #searchResultsSection {
-            width: 100%;
-            max-width: 1200px;
-            margin: 2rem auto;
-            animation: fadeIn 0.4s ease-out;
-        }
-
-        .search-results-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 1.5rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 1px solid rgba(255, 215, 0, 0.15);
-        }
-
-        .search-results-header h2 {
-            color: var(--text-white);
-            font-size: 1.4rem;
-            margin: 0;
-        }
-
-        .search-results-header h2 span {
-            color: var(--secondary-gold);
-        }
-
-        .clear-search-btn {
-            background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: var(--text-light-gray);
-            padding: 0.4rem 1rem;
-            font-size: 0.85rem;
-            border-radius: 20px;
-            box-shadow: none;
-            text-transform: none;
-            letter-spacing: normal;
-            font-weight: 400;
-        }
-
-        .clear-search-btn:hover {
-            background: rgba(255, 255, 255, 0.07);
-            border-color: rgba(255, 255, 255, 0.35);
-            color: var(--text-white);
-            transform: none;
-            box-shadow: none;
-        }
-
-        .no-results {
-            grid-column: 1 / -1;
-            text-align: center;
-            padding: 3rem 1rem;
-            color: var(--text-light-gray);
-        }
-
-        .no-results h3 {
-            color: var(--text-white);
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-        }
-
         /* ── Responsive ── */
         @media (max-width: 600px) {
             .panel {
                 padding: 2rem 1.5rem;
             }
 
-            .search-input {
-                width: 160px;
+            .browse-hero h2 {
+                font-size: 1.9rem;
             }
 
-            .search-input:focus {
-                width: 200px;
+            #browseSearchInput {
+                font-size: 0.95rem;
+            }
+
+            #browseSearchBtn {
+                padding: 1rem 1.1rem;
+                font-size: 0.9rem;
             }
         }
     </style>
@@ -955,7 +999,7 @@
         </div>
         <nav class="menu-links">
             <ul>
-                <li><a href="browse.html">Browse Movies</a></li>
+                <li><a href="browse.html" class="active">Browse Movies</a></li>
                 <li class="authenticated-only"><a href="recommendations.html">Recommendations</a></li>
                 <li class="authenticated-only"><a href="watchlist.html">Watchlist</a></li>
                 <li><a href="ratings.html">Ratings</a></li>
@@ -968,11 +1012,12 @@
     <header id="siteHeader">
         <div class="nav-left">
             <button class="menu-toggle" id="menuToggle" aria-label="Open menu" aria-expanded="false">☰</button>
-            <h1 id="logoBtn" style="cursor: pointer;" title="Back to Home">
-                <a href="/" style="color: inherit; text-decoration: none;">MovieMarvel</a>
+            <h1>
+                <a href="index.html"
+                   onclick="sessionStorage.removeItem('mm_index_page');sessionStorage.removeItem('mm_index_scroll');"
+                   style="color: inherit; text-decoration: none;">MovieMarvel</a>
             </h1>
         </div>
-
         <div style="display: flex; align-items: center; gap: 1rem;">
             <span class="nav-user-greeting authenticated-only" style="color: var(--text-light-gray); font-weight: 500;"></span>
             <button id="signupBtn" class="anonymous-only">Sign Up</button>
@@ -981,26 +1026,43 @@
     </header>
 
     <main id="mainContent">
-        <!-- Hero -->
-        <div class="hero-placeholder" id="heroText">
-            <h2>Welcome to MovieMarvel</h2>
-            <p>Your gateway to the cinematic universe. Discover, review, and track your favorite movies seamlessly.</p>
-        </div>
 
-        <!-- Dynamic Movie Gallery -->
-        <section id="movieSection" class="movie-section">
-            <div id="movieGrid" class="movie-grid">
-                <!-- Populated by movies-script.js -->
-            </div>
+        <!-- Browse Hero + Search -->
+        <section class="browse-hero" id="browseHero">
+            <h2>Browse <span>Movies</span></h2>
+            <p>Search thousands of films — type a title, actor, or keyword to get started.</p>
 
-            <div class="pagination">
-                <button id="prevPageBtn" class="circle-btn hidden-page"></button>
-                <div id="currentPageBtn" class="circle-btn active-page">1</div>
-                <button id="nextPageBtn" class="circle-btn hidden-page"></button>
+            <div class="browse-search-form" id="browseSearchForm" role="search">
+                <input type="text" id="browseSearchInput" placeholder="Search for a movie…" autocomplete="off"
+                    aria-label="Search movies" spellcheck="false">
+                <button type="button" id="browseSearchBtn" aria-label="Submit search">Search</button>
             </div>
         </section>
 
-        <!-- Sign Up Form -->
+        <!-- Idle state shown before any search is performed -->
+        <div class="browse-empty-state" id="browseEmptyState">
+            <div class="empty-icon">🎬</div>
+            <h3>What are you looking for?</h3>
+            <p>Your search results will appear here. Try searching for a title, franchise, or genre keyword.</p>
+        </div>
+
+        <!-- Search Results -->
+        <section id="browseResultsSection" class="movie-section hidden">
+            <div class="search-results-header">
+                <h2>Results for: <span id="browseQueryLabel"></span></h2>
+                <button class="clear-search-btn" id="clearBrowseBtn">✕ Clear</button>
+            </div>
+            <div id="browseResultsGrid" class="movie-grid"></div>
+
+            <!-- Pagination -->
+            <div class="pagination" id="browsePagination">
+                <button id="browsePrevBtn" class="circle-btn hidden-page"></button>
+                <div id="browseCurrentPageBtn" class="circle-btn active-page">1</div>
+                <button id="browseNextBtn" class="circle-btn hidden-page"></button>
+            </div>
+        </section>
+
+        <!-- Sign Up Form Panel -->
         <section id="signupForm" class="panel hidden">
             <button class="close-btn cancel-btn" aria-label="Close" type="button">&times;</button>
             <div style="text-align: center;">
@@ -1019,7 +1081,6 @@
                     <input type="password" id="password" placeholder="Enter your password" required>
                 </div>
 
-                <!-- Terms acknowledgement -->
                 <div class="ack-container">
                     <input type="checkbox" id="acknowledge">
                     <label for="acknowledge" class="ack-text">
@@ -1029,7 +1090,6 @@
                     </label>
                 </div>
 
-                <!-- Premium subscribe -->
                 <div class="checkbox-container">
                     <input type="checkbox" id="subscribe">
                     <label for="subscribe">Subscribe to MovieMarvel premium</label>
@@ -1070,7 +1130,7 @@
             </form>
         </section>
 
-        <!-- Subscription Payment Page -->
+        <!-- Subscription Payment Panel -->
         <section id="paymentPage" class="panel hidden">
             <button class="close-btn cancel-btn" aria-label="Close" type="button">&times;</button>
             <div>
@@ -1085,7 +1145,7 @@
             </div>
         </section>
 
-        <!-- Premium Featured Page -->
+        <!-- Premium Features Panel -->
         <section id="premiumPage" class="panel hidden">
             <button class="close-btn cancel-btn" aria-label="Close" type="button">&times;</button>
             <h2>MovieMarvel Premium Features</h2>
@@ -1104,7 +1164,7 @@
 
     <script src="config.js"></script>
     <script type="module" src="auth.js"></script>
-    <script src="movies-script.js"></script>
+    <script src="browse-script.js"></script>
     <script src="signup-script.js?v=2"></script>
 </body>
 
